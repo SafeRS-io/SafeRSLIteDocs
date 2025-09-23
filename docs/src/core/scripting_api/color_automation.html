@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>src.core.scripting_api.color_automation API documentation</title>
+<meta name="description" content="Color API - Color detection functions for scripting">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.core.scripting_api.color_automation</code></h1>
+</header>
+<section id="section-intro">
+<p>Color API - Color detection functions for scripting</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation"><code class="flex name class">
+<span>class <span class="ident">ColorAutomation</span></span>
+<span>(</span><span>color_scanner: utils.color_scanner.ColorScanner,<br>gear_config: core.app_config.AppConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ColorAutomation:
+    &#34;&#34;&#34;Handles color detection and related automation functions&#34;&#34;&#34;
+    
+    def __init__(self, color_scanner: ColorScanner, gear_config: AppConfig):
+        self.color_scanner = color_scanner
+        self.gear_config = gear_config
+    
+    def find_and_click_color(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, button: str = &#34;left&#34;, center_out: bool = False) -&gt; bool:
+        &#34;&#34;&#34;Find and click a color in an area - accepts area object or string ID&#34;&#34;&#34;
+        # Get area bounds
+        area_bounds = self._get_area_bounds(area)
+        if not area_bounds:
+            return False
+        
+        # Convert hex to RGB
+        color_rgb = self._hex_to_rgb(color_hex)
+        if not color_rgb:
+            return False
+        
+        # Check if this is a circular area
+        if self._is_circular_area(area):
+            # Circular area: (center_x, center_y, radius)
+            center_x, center_y, radius = area_bounds
+            if center_out:
+                coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+            else:
+                coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+            
+            if coordinates:
+                x, y = coordinates[0]  # Use first match
+                return self.color_scanner.mouse_controller.click(x, y, button)
+            else:
+                print(f&#34;Color {color_hex} not found in circular area&#34;)
+                return False
+        else:
+            # Rectangular area: (x1, y1, x2, y2)
+            x1, y1, x2, y2 = area_bounds
+            width = x2 - x1
+            height = y2 - y1
+            
+            # Search for color in rectangular area
+            result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+            
+            if result:
+                x, y = result[0]  # Use first match
+                return self.color_scanner.mouse_controller.click(x, y, button)
+            else:
+                print(f&#34;Color {color_hex} not found in rectangular area&#34;)
+                return False
+    
+    def wait_for_color(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, timeout: float = 10.0, is_running_callback: Optional[callable] = None, center_out: bool = False) -&gt; bool:
+        &#34;&#34;&#34;Wait until a color appears in an area - accepts area object or string ID&#34;&#34;&#34;
+        # Get area bounds
+        area_bounds = self._get_area_bounds(area)
+        if not area_bounds:
+            return False
+        
+        # Convert hex to RGB
+        color_rgb = self._hex_to_rgb(color_hex)
+        if not color_rgb:
+            return False
+        
+        start_time = time.time()
+        while time.time() - start_time &lt; timeout:
+            if is_running_callback and not is_running_callback():
+                return False
+            
+            # Check if this is a circular area
+            if self._is_circular_area(area):
+                if center_out:
+                    coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+                else:
+                    coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+                result = len(coordinates) &gt; 0
+            else:
+                # Rectangular area
+                result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+                result = len(result) &gt; 0 if result else False
+            
+            if result:
+                return True
+            
+            time.sleep(0.1)
+        
+        print(f&#34;Timeout waiting for color {color_hex} in area&#34;)
+        return False
+    
+    def does_color_exist(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, center_out: bool = False) -&gt; bool:
+        &#34;&#34;&#34;Check if a color exists in an area - accepts area object or string ID&#34;&#34;&#34;
+        # Get area bounds
+        area_bounds = self._get_area_bounds(area)
+        if not area_bounds:
+            return False
+        
+        # Convert hex to RGB
+        color_rgb = self._hex_to_rgb(color_hex)
+        if not color_rgb:
+            return False
+        
+        # Check if this is a circular area
+        if self._is_circular_area(area):
+            if center_out:
+                coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+            else:
+                coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+            return len(coordinates) &gt; 0
+        else:
+            # Rectangular area
+            result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+            return len(result) &gt; 0 if result else False
+    
+    def get_color_at_position(self, x: int, y: int) -&gt; Optional[Tuple[int, int, int]]:
+        &#34;&#34;&#34;Get RGB color at specific position&#34;&#34;&#34;
+        return self.color_scanner.get_color_at_position(x, y)
+    
+    def find_color_in_area(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, center_out: bool = False) -&gt; Optional[Tuple[int, int]]:
+        &#34;&#34;&#34;Find color in area and return coordinates&#34;&#34;&#34;
+        # Get area bounds
+        area_bounds = self._get_area_bounds(area)
+        if not area_bounds:
+            return None
+        
+        # Convert hex to RGB
+        color_rgb = self._hex_to_rgb(color_hex)
+        if not color_rgb:
+            return None
+        
+        # Check if this is a circular area
+        if self._is_circular_area(area):
+            if center_out:
+                coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+            else:
+                coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+            return coordinates[0] if coordinates else None
+        else:
+            # Rectangular area
+            result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+            return result[0] if result else None
+    
+    # Circular area specific methods
+    def find_color_closest_to_center(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10) -&gt; Optional[Tuple[int, int]]:
+        &#34;&#34;&#34;Find the color occurrence closest to the center of a circular area&#34;&#34;&#34;
+        if not self._is_circular_area(area):
+            print(f&#34;Area &#39;{area}&#39; is not a circular area&#34;)
+            return None
+        
+        area_bounds = self._get_area_bounds(area)
+        if not area_bounds:
+            return None
+        
+        color_rgb = self._hex_to_rgb(color_hex)
+        if not color_rgb:
+            return None
+        
+        return self.color_scanner.find_color_closest_to_center(area_bounds, color_rgb, tolerance)
+    
+    def scan_orb_status(self, orb_area: Union[Dict, str], status_colors: Dict[str, str], tolerance: int = 10) -&gt; Dict[str, bool]:
+        &#34;&#34;&#34;
+        Scan an orb area for different status colors
+        
+        Args:
+            orb_area: Orb area (health_orb, prayer_orb, run_orb, special_attack_orb)
+            status_colors: Dictionary mapping status names to hex colors
+            tolerance: Color tolerance for matching
+            
+        Returns:
+            Dictionary mapping status names to boolean (True if color found)
+        &#34;&#34;&#34;
+        if not self._is_circular_area(orb_area):
+            print(f&#34;Area &#39;{orb_area}&#39; is not a circular area&#34;)
+            return {}
+        
+        area_bounds = self._get_area_bounds(orb_area)
+        if not area_bounds:
+            return {}
+        
+        # Convert hex colors to RGB
+        rgb_colors = {}
+        for status_name, color_hex in status_colors.items():
+            color_rgb = self._hex_to_rgb(color_hex)
+            if color_rgb:
+                rgb_colors[status_name] = color_rgb
+        
+        return self.color_scanner.scan_orb_for_status(area_bounds, rgb_colors, tolerance)
+    
+    def get_all_colors_in_circle(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, center_out: bool = False) -&gt; List[Tuple[int, int]]:
+        &#34;&#34;&#34;Get all occurrences of a color in a circular area&#34;&#34;&#34;
+        if not self._is_circular_area(area):
+            print(f&#34;Area &#39;{area}&#39; is not a circular area&#34;)
+            return []
+        
+        area_bounds = self._get_area_bounds(area)
+        if not area_bounds:
+            return []
+        
+        color_rgb = self._hex_to_rgb(color_hex)
+        if not color_rgb:
+            return []
+        
+        if center_out:
+            return self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+        else:
+            return self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+    
+    def is_orb_low(self, orb_area: Union[Dict, str], low_color: str, tolerance: int = 10) -&gt; bool:
+        &#34;&#34;&#34;Check if an orb is in low status (convenience method)&#34;&#34;&#34;
+        return self.does_color_exist(orb_area, low_color, tolerance, center_out=True)
+    
+    def is_orb_high(self, orb_area: Union[Dict, str], high_color: str, tolerance: int = 10) -&gt; bool:
+        &#34;&#34;&#34;Check if an orb is in high status (convenience method)&#34;&#34;&#34;
+        return self.does_color_exist(orb_area, high_color, tolerance, center_out=True)
+    
+    def _get_area_bounds(self, area: Union[Dict, str]) -&gt; Optional[Union[Tuple[int, int, int, int], Tuple[int, int, int]]]:
+        &#34;&#34;&#34;Get area bounds from area object or string ID - returns rectangular (x1,y1,x2,y2) or circular (center_x,center_y,radius)&#34;&#34;&#34;
+        if isinstance(area, dict) and &#39;bounds&#39; in area:
+            # Area object passed directly
+            return area[&#39;bounds&#39;]
+        elif isinstance(area, str):
+            # String ID passed - look up area
+            area_data = self.gear_config.get_scan_area_by_id(area)
+            if not area_data:
+                print(f&#34;Area &#39;{area}&#39; not found&#34;)
+                return None
+            return area_data
+        else:
+            print(f&#34;Invalid area parameter: {area}&#34;)
+            return None
+    
+    def _is_circular_area(self, area: Union[Dict, str]) -&gt; bool:
+        &#34;&#34;&#34;Check if an area is circular based on its ID or data&#34;&#34;&#34;
+        if isinstance(area, str):
+            return self.color_scanner.is_circular_area(area)
+        elif isinstance(area, dict) and &#39;bounds&#39; in area:
+            # Check if bounds data indicates circular area (3 values instead of 4)
+            return len(area[&#39;bounds&#39;]) == 3
+        return False
+    
+    def _hex_to_rgb(self, color_hex: str) -&gt; Optional[Tuple[int, int, int]]:
+        &#34;&#34;&#34;Convert hex color to RGB tuple&#34;&#34;&#34;
+        try:
+            # Remove # if present
+            if color_hex.startswith(&#39;#&#39;):
+                color_hex = color_hex[1:]
+            
+            # Convert to RGB
+            return tuple(int(color_hex[i:i+2], 16) for i in (0, 2, 4))
+        except (ValueError, IndexError):
+            print(f&#34;Invalid color format: {color_hex}&#34;)
+            return None</code></pre>
+</details>
+<div class="desc"><p>Handles color detection and related automation functions</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.does_color_exist"><code class="name flex">
+<span>def <span class="ident">does_color_exist</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>center_out: bool = False) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def does_color_exist(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, center_out: bool = False) -&gt; bool:
+    &#34;&#34;&#34;Check if a color exists in an area - accepts area object or string ID&#34;&#34;&#34;
+    # Get area bounds
+    area_bounds = self._get_area_bounds(area)
+    if not area_bounds:
+        return False
+    
+    # Convert hex to RGB
+    color_rgb = self._hex_to_rgb(color_hex)
+    if not color_rgb:
+        return False
+    
+    # Check if this is a circular area
+    if self._is_circular_area(area):
+        if center_out:
+            coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+        else:
+            coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+        return len(coordinates) &gt; 0
+    else:
+        # Rectangular area
+        result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+        return len(result) &gt; 0 if result else False</code></pre>
+</details>
+<div class="desc"><p>Check if a color exists in an area - accepts area object or string ID</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.find_and_click_color"><code class="name flex">
+<span>def <span class="ident">find_and_click_color</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>button: str = 'left',<br>center_out: bool = False) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_and_click_color(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, button: str = &#34;left&#34;, center_out: bool = False) -&gt; bool:
+    &#34;&#34;&#34;Find and click a color in an area - accepts area object or string ID&#34;&#34;&#34;
+    # Get area bounds
+    area_bounds = self._get_area_bounds(area)
+    if not area_bounds:
+        return False
+    
+    # Convert hex to RGB
+    color_rgb = self._hex_to_rgb(color_hex)
+    if not color_rgb:
+        return False
+    
+    # Check if this is a circular area
+    if self._is_circular_area(area):
+        # Circular area: (center_x, center_y, radius)
+        center_x, center_y, radius = area_bounds
+        if center_out:
+            coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+        else:
+            coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+        
+        if coordinates:
+            x, y = coordinates[0]  # Use first match
+            return self.color_scanner.mouse_controller.click(x, y, button)
+        else:
+            print(f&#34;Color {color_hex} not found in circular area&#34;)
+            return False
+    else:
+        # Rectangular area: (x1, y1, x2, y2)
+        x1, y1, x2, y2 = area_bounds
+        width = x2 - x1
+        height = y2 - y1
+        
+        # Search for color in rectangular area
+        result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+        
+        if result:
+            x, y = result[0]  # Use first match
+            return self.color_scanner.mouse_controller.click(x, y, button)
+        else:
+            print(f&#34;Color {color_hex} not found in rectangular area&#34;)
+            return False</code></pre>
+</details>
+<div class="desc"><p>Find and click a color in an area - accepts area object or string ID</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.find_color_closest_to_center"><code class="name flex">
+<span>def <span class="ident">find_color_closest_to_center</span></span>(<span>self, area: Dict | str, color_hex: str, tolerance: int = 10) ‑> Tuple[int, int] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_color_closest_to_center(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10) -&gt; Optional[Tuple[int, int]]:
+    &#34;&#34;&#34;Find the color occurrence closest to the center of a circular area&#34;&#34;&#34;
+    if not self._is_circular_area(area):
+        print(f&#34;Area &#39;{area}&#39; is not a circular area&#34;)
+        return None
+    
+    area_bounds = self._get_area_bounds(area)
+    if not area_bounds:
+        return None
+    
+    color_rgb = self._hex_to_rgb(color_hex)
+    if not color_rgb:
+        return None
+    
+    return self.color_scanner.find_color_closest_to_center(area_bounds, color_rgb, tolerance)</code></pre>
+</details>
+<div class="desc"><p>Find the color occurrence closest to the center of a circular area</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.find_color_in_area"><code class="name flex">
+<span>def <span class="ident">find_color_in_area</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>center_out: bool = False) ‑> Tuple[int, int] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_color_in_area(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, center_out: bool = False) -&gt; Optional[Tuple[int, int]]:
+    &#34;&#34;&#34;Find color in area and return coordinates&#34;&#34;&#34;
+    # Get area bounds
+    area_bounds = self._get_area_bounds(area)
+    if not area_bounds:
+        return None
+    
+    # Convert hex to RGB
+    color_rgb = self._hex_to_rgb(color_hex)
+    if not color_rgb:
+        return None
+    
+    # Check if this is a circular area
+    if self._is_circular_area(area):
+        if center_out:
+            coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+        else:
+            coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+        return coordinates[0] if coordinates else None
+    else:
+        # Rectangular area
+        result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+        return result[0] if result else None</code></pre>
+</details>
+<div class="desc"><p>Find color in area and return coordinates</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_circle"><code class="name flex">
+<span>def <span class="ident">get_all_colors_in_circle</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>center_out: bool = False) ‑> List[Tuple[int, int]]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_colors_in_circle(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, center_out: bool = False) -&gt; List[Tuple[int, int]]:
+    &#34;&#34;&#34;Get all occurrences of a color in a circular area&#34;&#34;&#34;
+    if not self._is_circular_area(area):
+        print(f&#34;Area &#39;{area}&#39; is not a circular area&#34;)
+        return []
+    
+    area_bounds = self._get_area_bounds(area)
+    if not area_bounds:
+        return []
+    
+    color_rgb = self._hex_to_rgb(color_hex)
+    if not color_rgb:
+        return []
+    
+    if center_out:
+        return self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+    else:
+        return self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)</code></pre>
+</details>
+<div class="desc"><p>Get all occurrences of a color in a circular area</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.get_color_at_position"><code class="name flex">
+<span>def <span class="ident">get_color_at_position</span></span>(<span>self, x: int, y: int) ‑> Tuple[int, int, int] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_color_at_position(self, x: int, y: int) -&gt; Optional[Tuple[int, int, int]]:
+    &#34;&#34;&#34;Get RGB color at specific position&#34;&#34;&#34;
+    return self.color_scanner.get_color_at_position(x, y)</code></pre>
+</details>
+<div class="desc"><p>Get RGB color at specific position</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.is_orb_high"><code class="name flex">
+<span>def <span class="ident">is_orb_high</span></span>(<span>self, orb_area: Dict | str, high_color: str, tolerance: int = 10) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_orb_high(self, orb_area: Union[Dict, str], high_color: str, tolerance: int = 10) -&gt; bool:
+    &#34;&#34;&#34;Check if an orb is in high status (convenience method)&#34;&#34;&#34;
+    return self.does_color_exist(orb_area, high_color, tolerance, center_out=True)</code></pre>
+</details>
+<div class="desc"><p>Check if an orb is in high status (convenience method)</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.is_orb_low"><code class="name flex">
+<span>def <span class="ident">is_orb_low</span></span>(<span>self, orb_area: Dict | str, low_color: str, tolerance: int = 10) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_orb_low(self, orb_area: Union[Dict, str], low_color: str, tolerance: int = 10) -&gt; bool:
+    &#34;&#34;&#34;Check if an orb is in low status (convenience method)&#34;&#34;&#34;
+    return self.does_color_exist(orb_area, low_color, tolerance, center_out=True)</code></pre>
+</details>
+<div class="desc"><p>Check if an orb is in low status (convenience method)</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.scan_orb_status"><code class="name flex">
+<span>def <span class="ident">scan_orb_status</span></span>(<span>self, orb_area: Dict | str, status_colors: Dict[str, str], tolerance: int = 10) ‑> Dict[str, bool]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scan_orb_status(self, orb_area: Union[Dict, str], status_colors: Dict[str, str], tolerance: int = 10) -&gt; Dict[str, bool]:
+    &#34;&#34;&#34;
+    Scan an orb area for different status colors
+    
+    Args:
+        orb_area: Orb area (health_orb, prayer_orb, run_orb, special_attack_orb)
+        status_colors: Dictionary mapping status names to hex colors
+        tolerance: Color tolerance for matching
+        
+    Returns:
+        Dictionary mapping status names to boolean (True if color found)
+    &#34;&#34;&#34;
+    if not self._is_circular_area(orb_area):
+        print(f&#34;Area &#39;{orb_area}&#39; is not a circular area&#34;)
+        return {}
+    
+    area_bounds = self._get_area_bounds(orb_area)
+    if not area_bounds:
+        return {}
+    
+    # Convert hex colors to RGB
+    rgb_colors = {}
+    for status_name, color_hex in status_colors.items():
+        color_rgb = self._hex_to_rgb(color_hex)
+        if color_rgb:
+            rgb_colors[status_name] = color_rgb
+    
+    return self.color_scanner.scan_orb_for_status(area_bounds, rgb_colors, tolerance)</code></pre>
+</details>
+<div class="desc"><p>Scan an orb area for different status colors</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>orb_area</code></strong></dt>
+<dd>Orb area (health_orb, prayer_orb, run_orb, special_attack_orb)</dd>
+<dt><strong><code>status_colors</code></strong></dt>
+<dd>Dictionary mapping status names to hex colors</dd>
+<dt><strong><code>tolerance</code></strong></dt>
+<dd>Color tolerance for matching</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Dictionary mapping status names to boolean (True if color found)</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.wait_for_color"><code class="name flex">
+<span>def <span class="ident">wait_for_color</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>timeout: float = 10.0,<br>is_running_callback: <built-in function callable> | None = None,<br>center_out: bool = False) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def wait_for_color(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, timeout: float = 10.0, is_running_callback: Optional[callable] = None, center_out: bool = False) -&gt; bool:
+    &#34;&#34;&#34;Wait until a color appears in an area - accepts area object or string ID&#34;&#34;&#34;
+    # Get area bounds
+    area_bounds = self._get_area_bounds(area)
+    if not area_bounds:
+        return False
+    
+    # Convert hex to RGB
+    color_rgb = self._hex_to_rgb(color_hex)
+    if not color_rgb:
+        return False
+    
+    start_time = time.time()
+    while time.time() - start_time &lt; timeout:
+        if is_running_callback and not is_running_callback():
+            return False
+        
+        # Check if this is a circular area
+        if self._is_circular_area(area):
+            if center_out:
+                coordinates = self.color_scanner.scan_circular_area_center_out(area_bounds, color_rgb, tolerance)
+            else:
+                coordinates = self.color_scanner.scan_circular_area(area_bounds, color_rgb, tolerance)
+            result = len(coordinates) &gt; 0
+        else:
+            # Rectangular area
+            result = self.color_scanner.find_color_coordinates(color_rgb, tolerance, area_bounds)
+            result = len(result) &gt; 0 if result else False
+        
+        if result:
+            return True
+        
+        time.sleep(0.1)
+    
+    print(f&#34;Timeout waiting for color {color_hex} in area&#34;)
+    return False</code></pre>
+</details>
+<div class="desc"><p>Wait until a color appears in an area - accepts area object or string ID</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.core.scripting_api.color_automation.ColorAutomation" href="#src.core.scripting_api.color_automation.ColorAutomation">ColorAutomation</a></code></h4>
+<ul class="">
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.does_color_exist" href="#src.core.scripting_api.color_automation.ColorAutomation.does_color_exist">does_color_exist</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_and_click_color" href="#src.core.scripting_api.color_automation.ColorAutomation.find_and_click_color">find_and_click_color</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_color_closest_to_center" href="#src.core.scripting_api.color_automation.ColorAutomation.find_color_closest_to_center">find_color_closest_to_center</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_color_in_area" href="#src.core.scripting_api.color_automation.ColorAutomation.find_color_in_area">find_color_in_area</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_circle" href="#src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_circle">get_all_colors_in_circle</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.get_color_at_position" href="#src.core.scripting_api.color_automation.ColorAutomation.get_color_at_position">get_color_at_position</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.is_orb_high" href="#src.core.scripting_api.color_automation.ColorAutomation.is_orb_high">is_orb_high</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.is_orb_low" href="#src.core.scripting_api.color_automation.ColorAutomation.is_orb_low">is_orb_low</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.scan_orb_status" href="#src.core.scripting_api.color_automation.ColorAutomation.scan_orb_status">scan_orb_status</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.wait_for_color" href="#src.core.scripting_api.color_automation.ColorAutomation.wait_for_color">wait_for_color</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
