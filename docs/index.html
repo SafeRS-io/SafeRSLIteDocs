@@ -102,6 +102,41 @@
             color: #f9fafb;
             font-size: 1.5em;
         }
+        .showcase-step {
+            background: #2a2a2a;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+        .showcase-step:hover {
+            border-color: #9ca3af;
+        }
+        .showcase-step h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #f9fafb;
+            font-size: 1.4em;
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 10px;
+        }
+        .showcase-step p {
+            color: #d1d5db;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .showcase-step img {
+            border: 2px solid #374151;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .showcase-step img:hover {
+            border-color: #10b981;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);
+        }
         .code-block {
             background: #1a1a1a;
             color: #f1f5f9;
@@ -168,6 +203,76 @@
 
             <div class="highlight">
                 <strong>💡 Quick Start:</strong> Copy the template below into the SafeRS Lite Script Editor, modify it for your needs, and run it!
+            </div>
+
+            <h2>🎮 SafeRS Lite Showcase <span id="showcase-toggle" style="cursor: pointer; font-size: 0.8em; color: #666;">[Click to expand]</span></h2>
+            <div class="template-section" id="showcase-content" style="display: none;">
+                <div class="showcase-step">
+                    <h3>Step 1: Window Attachment <span id="step1-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step1-content" style="display: none;">
+                        <p>Choose any window that is open on your computer and easily attach SafeRS Lite to it. The window attachment system allows you to target specific applications for automation.</p>
+                        <img src="assets/example_window_attachment.png" alt="Window Attachment Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+                    </div>
+                </div>
+
+                <div class="showcase-step">
+                    <h3>Step 2: Area Configuration <span id="step2-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step2-content" style="display: none;">
+                        <p>SafeRS Lite comes with a bunch of standard required areas to configure with custom draw handling. These areas are initialized as globals for scripting:</p>
+                        <ul style="color: #d1d5db; margin: 15px 0;">
+                            <li><code>self.inventory</code> - Inventory area data</li>
+                            <li><code>self.play_area</code> - Main game area data</li>
+                            <li><code>self.bank</code> - Bank interface area data</li>
+                            <li><code>self.spellbook</code> - Spellbook area data</li>
+                            <li><code>self.chat</code> - Chat interface area data</li>
+                            <li><code>self.minimap</code> - Minimap area data</li>
+                        </ul>
+                        <img src="assets/example_areas.png" alt="Area Configuration Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+                    </div>
+                </div>
+
+                <div class="showcase-step">
+                    <h3>Step 3: Script Management <span id="step3-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step3-content" style="display: none;">
+                        <p>Your saved scripts will load here and you can run them directly from this interface. This is your script library where all your automation scripts are organized.</p>
+                        <img src="assets/example_scripts1.png" alt="Scripts View Example 1" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+
+                        <p>SafeRS Lite comes with a built-in gear switcher that allows you to quickly switch between equipment setups. This is included with every SafeRS Lite installation.</p>
+                        <img src="assets/example_scripts2.png" alt="Built-in Gear Switcher Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+                    </div>
+                </div>
+
+                <div class="showcase-step">
+                    <h3>Step 4: Script Editor <span id="step4-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step4-content" style="display: none;">
+                        <p>The built-in script loader lets you paste in your script or edit existing ones. Scripts can be loaded from your saved scripts library or created from scratch.</p>
+                        <img src="assets/example_scripting_editor.png" alt="Scripting Editor Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+                    </div>
+                </div>
+
+                <div class="showcase-step">
+                    <h3>Step 5: Script Execution <span id="step5-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step5-content" style="display: none;">
+                        <p>Start and stop your scripts with simple controls. The log output area shows real-time feedback from your running scripts, including status updates and any errors.</p>
+                        <img src="assets/example_script_execution.png" alt="Script Execution Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+                    </div>
+                </div>
+
+                <div class="showcase-step">
+                    <h3>Step 6: Saved Scripts Management <span id="step6-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step6-content" style="display: none;">
+                        <p>Manage your saved scripts configuration. Scripts are automatically saved and will load into the program each time you start SafeRS Lite.</p>
+                        <img src="assets/example_saved_scripts.png" alt="Saved Scripts Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+                    </div>
+                </div>
+
+                <div class="showcase-step">
+                    <h3>Step 7: Script Utilities <span id="step7-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step7-content" style="display: none;">
+                        <p>Helpful utilities for picking coordinates and colors. These tools make it easy to identify specific screen locations and color values for your automation scripts.</p>
+                        <img src="assets/example_script_utilities.png" alt="Script Utilities Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
+                    </div>
+                </div>
             </div>
 
             <h2>📝 BaseScript Template <span id="template-toggle" style="cursor: pointer; font-size: 0.8em; color: #666;">[Click to expand]</span></h2>
@@ -428,6 +533,37 @@
     </div>
 
     <script>
+        // Showcase toggle
+        document.getElementById('showcase-toggle').addEventListener('click', function() {
+            const content = document.getElementById('showcase-content');
+            const toggle = document.getElementById('showcase-toggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '[Click to collapse]';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '[Click to expand]';
+            }
+        });
+
+        // Step toggles - make entire step container clickable
+        for (let i = 1; i <= 7; i++) {
+            const stepContainer = document.querySelector(`#step${i}-content`).closest('.showcase-step');
+            const toggle = document.getElementById(`step${i}-toggle`);
+            const content = document.getElementById(`step${i}-content`);
+            
+            stepContainer.addEventListener('click', function() {
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    toggle.textContent = '[Click to collapse]';
+                } else {
+                    content.style.display = 'none';
+                    toggle.textContent = '[Click to expand]';
+                }
+            });
+        }
+
         // Template toggle
         document.getElementById('template-toggle').addEventListener('click', function() {
             const content = document.getElementById('template-content');
