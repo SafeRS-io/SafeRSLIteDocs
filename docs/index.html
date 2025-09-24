@@ -91,6 +91,15 @@
                             <li><code>self.spellbook</code> - Spellbook area data</li>
                             <li><code>self.chat</code> - Chat interface area data</li>
                             <li><code>self.minimap</code> - Minimap area data</li>
+                            <li><code>self.equipment</code> - Equipment area data</li>
+                            <li><code>self.prayer_menu</code> - Prayer menu area data</li>
+                            <li><code>self.compass</code> - Compass area data</li>
+                            <li><code>self.health_orb</code> - Health orb area data</li>
+                            <li><code>self.prayer_orb</code> - Prayer orb area data</li>
+                            <li><code>self.run_orb</code> - Run orb area data</li>
+                            <li><code>self.special_attack_orb</code> - Special attack orb area data</li>
+                            <li><code>self.xp_drop_area</code> - XP drop area data</li>
+                            <li><code>custom areas by string</code> - Custom areas data if you put a space use underscores</li>
                         </ul>
                         <img src="assets/example_areas.png" alt="Area Configuration Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
                     </div>
@@ -377,6 +386,191 @@
 
                 <div class="highlight">
                     <strong>💡 Pro Tip:</strong> You can use any of these libraries directly in your scripts without importing them. For example: <code>import random</code>, <code>import time</code>, <code>import json</code>, etc.
+                </div>
+            </div>
+
+            <h2>💻 Code Examples <span id="examples-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
+            <div class="template-section" id="examples-content" style="display: none;">
+                <h3>Simple Woodcutter Script</h3>
+                <p>This example demonstrates a complete woodcutting automation script that cuts trees and drops logs:</p>
+                
+                <pre class="code-block"><span style="color: #6A9955;"># SafeRS Lite BaseScript Template</span>
+<span style="color: #6A9955;"># Create a script class that inherits from BaseScript</span>
+
+<span style="color: #569CD6;">from</span> <span style="color: #9CDCFE;">internal_scripts</span>.<span style="color: #9CDCFE;">base_script</span> <span style="color: #569CD6;">import</span> <span style="color: #4EC9B0;">BaseScript</span>
+
+<span style="color: #569CD6;">class</span> <span style="color: #4EC9B0;">SimpleWoodcutter</span>(<span style="color: #4EC9B0;">BaseScript</span>):
+    <span style="color: #6A9955;">"""
+    Simple Woodcutter - Cuts trees and drops logs
+    """</span>
+    <span style="color: #569CD6;">class</span> <span style="color: #4EC9B0;">WoodcutterStates</span>(<span style="color: #4EC9B0;">enum</span>.<span style="color: #4EC9B0;">Enum</span>):
+        <span style="color: #4EC9B0;">CUTTING_TREE</span> = <span style="color: #CE9178;">"Cutting Tree"</span>
+        <span style="color: #4EC9B0;">DROPPING_LOGS</span> = <span style="color: #CE9178;">"Dropping Logs"</span>
+        <span style="color: #4EC9B0;">CHECKING_INVENTORY</span> = <span style="color: #CE9178;">"Checking Inventory"</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">__init__</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #4EC9B0;">super</span>().<span style="color: #DCDCAA;">__init__</span>(
+            <span style="color: #9CDCFE;">name</span>=<span style="color: #CE9178;">"Simple Woodcutter"</span>,
+            <span style="color: #9CDCFE;">description</span>=<span style="color: #CE9178;">"Cuts trees and drops logs"</span>,
+            <span style="color: #9CDCFE;">version</span>=<span style="color: #CE9178;">"1.0"</span>
+        )
+        
+        <span style="color: #6A9955;"># Set script metadata</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">metadata</span>.<span style="color: #DCDCAA;">update</span>({
+            <span style="color: #CE9178;">'category'</span>: <span style="color: #CE9178;">'skilling'</span>,  <span style="color: #6A9955;"># e.g., 'combat', 'skilling', 'utility'</span>
+            <span style="color: #CE9178;">'tags'</span>: [<span style="color: #CE9178;">'woodcutting'</span>, <span style="color: #CE9178;">'afk'</span>],  <span style="color: #6A9955;"># e.g., ['combat', 'pvm', 'afk']</span>
+            <span style="color: #CE9178;">'requirements'</span>: []  <span style="color: #6A9955;"># e.g., ['inventory_space', 'specific_item']</span>
+        })
+        
+        <span style="color: #6A9955;"># Script-specific variables</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">tree_color</span> = <span style="color: #CE9178;">"#00FF00"</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">log_color</span> = <span style="color: #CE9178;">"#0000FF"</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">xp_drop_color</span> = <span style="color: #CE9178;">"#9fa399"</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">setup</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">bool</span>:
+        <span style="color: #6A9955;">"""
+        Setup method called before script execution
+        Initialize any resources needed for the script
+        """</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Setting up Basic Woodcutter..."</span>)
+        
+        <span style="color: #6A9955;"># Check if required automation modules are available</span>
+        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #4EC9B0;">hasattr</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #CE9178;">'inventory'</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"ERROR: Inventory automation not available"</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">False</span>
+        
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Setup completed successfully"</span>)
+        <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">True</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">execute_iteration</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">bool</span>:
+        <span style="color: #6A9955;">"""
+        Execute one iteration of the script
+        This is where your main script logic goes
+        """</span>
+        <span style="color: #569CD6;">try</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Current state: {self.state}"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">execute_state</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">True</span>  <span style="color: #6A9955;"># Continue execution</span>
+            
+        <span style="color: #569CD6;">except</span> <span style="color: #4EC9B0;">Exception</span> <span style="color: #569CD6;">as</span> <span style="color: #9CDCFE;">e</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"ERROR in execute_iteration: {str(e)}"</span>)
+            <span style="color: #569CD6;">import</span> <span style="color: #9CDCFE;">traceback</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Traceback: {traceback.format_exc()}"</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">False</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">cleanup</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">None</span>:
+        <span style="color: #6A9955;">"""
+        Cleanup method called after script execution
+        Clean up any resources used by the script
+        """</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Cleaning up MyScript..."</span>)
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Script finished"</span>)
+
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">execute_state</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #9CDCFE;">state</span>: <span style="color: #4EC9B0;">WoodcutterStates</span>):
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">CUTTING_TREE</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Cutting Tree"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_cutting_tree</span>()
+        <span style="color: #569CD6;">elif</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">DROPPING_LOGS</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Dropping Logs"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_dropping_logs</span>()
+        <span style="color: #569CD6;">elif</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking Inventory"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_checking_inventory</span>()
+            
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_checking_inventory</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking Inventory"</span>)
+        <span style="color: #6A9955;"># Check if inventory is full</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking inventory..."</span>)
+        <span style="color: #9CDCFE;">last_slot</span> = <span style="color: #4EC9B0;">len</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>) - <span style="color: #B5CEA8;">1</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Checking last slot {last_slot} for log color {self.log_color}"</span>)
+        <span style="color: #9CDCFE;">slot_data</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>[<span style="color: #9CDCFE;">last_slot</span>]
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Last slot data: {slot_data}"</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">does_color_exist_at_slot</span>(<span style="color: #9CDCFE;">last_slot</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">log_color</span>, <span style="color: #B5CEA8;">10</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Inventory full, switching to dropping state"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">DROPPING_LOGS</span>
+        <span style="color: #569CD6;">else</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Inventory not full, continuing to cut"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_cutting_tree</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Cutting Tree"</span>)
+        
+        <span style="color: #569CD6;">try</span>:
+            <span style="color: #6A9955;"># Tree detection and clicking</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Looking for tree..."</span>)
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">color</span>.<span style="color: #DCDCAA;">find_and_click_color</span>(<span style="color: #CE9178;">"play_area"</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">tree_color</span>, <span style="color: #B5CEA8;">10</span>, <span style="color: #CE9178;">"left"</span>, <span style="color: #569CD6;">True</span>):
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Clicked Tree"</span>)
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            <span style="color: #6A9955;"># Wait for XP to be gained</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Waiting for XP..."</span>)
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">color</span>.<span style="color: #DCDCAA;">wait_for_xp_gain</span>(<span style="color: #CE9178;">"xp_drop"</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">xp_drop_color</span>, <span style="color: #B5CEA8;">5</span>, <span style="color: #B5CEA8;">5.0</span>):
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"XP gained successfully"</span>)
+            <span style="color: #569CD6;">else</span>:
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Failed to gain XP"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>
+        
+        <span style="color: #569CD6;">except</span> <span style="color: #4EC9B0;">Exception</span> <span style="color: #569CD6;">as</span> <span style="color: #9CDCFE;">e</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"ERROR in handle_cutting_tree: {str(e)}"</span>)
+            <span style="color: #569CD6;">import</span> <span style="color: #9CDCFE;">traceback</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Traceback: {traceback.format_exc()}"</span>)
+                
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_dropping_logs</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Dropping Logs"</span>)
+        <span style="color: #6A9955;"># Drop all logs with blue color from inventory</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Looking for color {self.log_color} in inventory..."</span>)
+        
+        <span style="color: #6A9955;"># First, let's check which slots actually have the color</span>
+        <span style="color: #9CDCFE;">slots_with_color</span> = []
+        <span style="color: #569CD6;">for</span> <span style="color: #9CDCFE;">slot_id</span> <span style="color: #569CD6;">in</span> <span style="color: #4EC9B0;">range</span>(<span style="color: #4EC9B0;">len</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>)):
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">does_color_exist_at_slot</span>(<span style="color: #9CDCFE;">slot_id</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">log_color</span>, <span style="color: #B5CEA8;">10</span>):
+                <span style="color: #9CDCFE;">slots_with_color</span>.<span style="color: #DCDCAA;">append</span>(<span style="color: #9CDCFE;">slot_id</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #9CDCFE;">slots_with_color</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"No slots found with target color, switching to cutting"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">CUTTING_TREE</span>
+            <span style="color: #569CD6;">return</span>
+        
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Found {len(slots_with_color)} slots with color: {slots_with_color}"</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">drop_all_color</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">log_color</span>, <span style="color: #B5CEA8;">10</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Logs dropped successfully"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">WoodcutterStates</span>.<span style="color: #4EC9B0;">CUTTING_TREE</span>
+        <span style="color: #569CD6;">else</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Failed to drop logs"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">stop_script</span>()</pre>
+                
+                <div style="margin: 15px 0; text-align: center;">
+                    <button id="copy-woodcutter-btn" style="
+                        background: linear-gradient(135deg, #10b981, #34d399);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(16, 185, 129, 0.3)'">
+                        📋 Copy Woodcutter Script to Clipboard
+                    </button>
+                </div>
+                
+                <div class="highlight">
+                    <strong>💡 Script Features:</strong>
+                    <ul style="color: #d1d5db; margin: 15px 0;">
+                        <li><strong>Advanced State Management:</strong> Uses enum states (CUTTING_TREE, CHECKING_INVENTORY, DROPPING_LOGS) for precise control flow</li>
+                        <li><strong>Smart Color Detection:</strong> Finds trees by green color (#00FF00) and logs by blue color (#0000FF) using intelligent pixel scanning</li>
+                        <li><strong>XP Monitoring:</strong> Uses pixel scanning for reliable XP text detection (#9fa399) with proper success/failure handling</li>
+                        <li><strong>Intelligent Inventory Management:</strong> Checks last slot for accurate inventory full detection and logs detailed slot information</li>
+                        <li><strong>Debug Logging:</strong> Comprehensive logging shows exactly which slots contain target colors for troubleshooting</li>
+                        <li><strong>Robust Error Handling:</strong> Comprehensive error handling with detailed logging and traceback information</li>
+                        <li><strong>Human-like Timing:</strong> Random delays between actions for natural, undetectable behavior</li>
+                        <li><strong>Smart Dropping:</strong> Holds Shift key throughout entire dropping sequence for efficient log removal</li>
+                    </ul>
                 </div>
             </div>
 

@@ -7,7 +7,8 @@ function checkAllSectionsCollapsed() {
         'template-content', 
         'api-content',
         'libraries-content',
-        'features-content'
+        'features-content',
+        'examples-content'
     ];
     
     const allCollapsed = sections.every(sectionId => {
@@ -169,6 +170,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Make section titles clickable - Code Examples toggle
+    const examplesH2 = document.querySelector('#examples-toggle').closest('h2');
+    examplesH2.addEventListener('click', function() {
+        const content = document.getElementById('examples-content');
+        const toggle = document.getElementById('examples-toggle');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggle.textContent = '[Click to collapse]';
+            // Scroll to position content just below header
+            scrollContentBelowHeader(content);
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = '[Click to expand]';
+            // Check if all sections are collapsed and scroll to top if needed
+            setTimeout(() => {
+                checkAllSectionsCollapsed();
+            }, 100);
+        }
+    });
+
     // Copy template to clipboard functionality
     const copyButton = document.getElementById('copy-template-btn');
     if (copyButton) {
@@ -201,6 +223,51 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Show success feedback
                 const button = document.getElementById('copy-template-btn');
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copied!';
+                button.style.background = 'linear-gradient(135deg, #34d399, #10b981)';
+                
+                // Reset button after 2 seconds
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                }, 2000);
+            });
+        });
+    }
+
+    // Copy woodcutter script to clipboard functionality
+    const copyWoodcutterButton = document.getElementById('copy-woodcutter-btn');
+    if (copyWoodcutterButton) {
+        copyWoodcutterButton.addEventListener('click', function() {
+            // Get the woodcutter code without HTML formatting
+            const codeBlock = document.querySelector('#examples-content .code-block');
+            const codeText = codeBlock.textContent || codeBlock.innerText;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(codeText).then(function() {
+                // Show success feedback
+                const button = document.getElementById('copy-woodcutter-btn');
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copied!';
+                button.style.background = 'linear-gradient(135deg, #34d399, #10b981)';
+                
+                // Reset button after 2 seconds
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                }, 2000);
+            }).catch(function(err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = codeText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                // Show success feedback
+                const button = document.getElementById('copy-woodcutter-btn');
                 const originalText = button.innerHTML;
                 button.innerHTML = '✅ Copied!';
                 button.style.background = 'linear-gradient(135deg, #34d399, #10b981)';
