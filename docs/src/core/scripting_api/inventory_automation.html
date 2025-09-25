@@ -67,25 +67,45 @@ el.replaceWith(d);
         self.keyboard_controller = keyboard_controller
         
     def click_slot(self, slot_id: int, button: str = &#34;left&#34;) -&gt; bool:
-        &#34;&#34;&#34;Click on an inventory slot&#34;&#34;&#34;
+        &#34;&#34;&#34;Click on an inventory slot with randomized position&#34;&#34;&#34;
         if not self._is_valid_slot(slot_id):
             return False
         
         slot_data = self.inventory_slots[slot_id]
         x, y = slot_data[&#39;center&#39;]
+        
+        # Add randomization within 3 pixel radius (slots are smaller than general areas)
+        offset_x = random.randint(-3, 3)
+        offset_y = random.randint(-3, 3)
+        x += offset_x
+        y += offset_y
+        
         return self.mouse_controller.click(x, y, button)
     
     def drop_all_items(self) -&gt; bool:
         &#34;&#34;&#34;Drop all items in inventory&#34;&#34;&#34;
-        self.keyboard_controller.key_down(VK.SHIFT)
-        time.sleep(random.uniform(0.05, 0.1))
+        # Ensure window is focused before sending shift key
+        self._ensure_window_focus()
+        
+        # Try alternative shift key method first
+        shift_success = self._send_shift_key_alternative()
+        if not shift_success:
+            # Fall back to original method
+            self.keyboard_controller.key_down(VK.SHIFT)
+        
+        # Wait longer to ensure shift is properly registered before clicking
+        time.sleep(random.uniform(0.3, 0.5))
         
         try:
             for slot_id in range(len(self.inventory_slots)):
                 self.click_slot(slot_id, &#34;left&#34;)
                 time.sleep(random.uniform(0.03, 0.1))
         finally:
-            self.keyboard_controller.key_up(VK.SHIFT)
+            # Release shift using the same method we used to press it
+            if shift_success:
+                self._release_shift_key_alternative()
+            else:
+                self.keyboard_controller.key_up(VK.SHIFT)
         
         return True
         
@@ -96,15 +116,28 @@ el.replaceWith(d);
         if not slots_to_drop:
             return False
         
-        self.keyboard_controller.key_down(VK.SHIFT)
-        time.sleep(random.uniform(0.05, 0.1))
+        # Ensure window is focused before sending shift key
+        self._ensure_window_focus()
+        
+        # Try alternative shift key method first
+        shift_success = self._send_shift_key_alternative()
+        if not shift_success:
+            # Fall back to original method
+            self.keyboard_controller.key_down(VK.SHIFT)
+        
+        # Wait longer to ensure shift is properly registered before clicking
+        time.sleep(random.uniform(0.3, 0.5))
         
         try:
             for slot_id in slots_to_drop:
                 self.click_slot(slot_id, &#34;left&#34;)
                 time.sleep(random.uniform(0.1, 0.3))
         finally:
-            self.keyboard_controller.key_up(VK.SHIFT)
+            # Release shift using the same method we used to press it
+            if shift_success:
+                self._release_shift_key_alternative()
+            else:
+                self.keyboard_controller.key_up(VK.SHIFT)
         
         return True
     
@@ -208,7 +241,18 @@ el.replaceWith(d);
         
         # Use smart detection that automatically chooses the best method
         coordinates = self.color_scanner.find_color_smart(color_rgb, tolerance, bounds)
-        return coordinates[0] if coordinates else None
+        
+        if coordinates:
+            # Calculate center of all found coordinates
+            if len(coordinates) == 1:
+                return coordinates[0]
+            else:
+                # Calculate average position (center of all found pixels)
+                avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+                avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+                return (avg_x, avg_y)
+        
+        return None
     
     def _find_slots_with_color(self, color_hex: str, tolerance: int) -&gt; List[int]:
         &#34;&#34;&#34;Find all slots that contain a specific color&#34;&#34;&#34;
@@ -236,7 +280,194 @@ el.replaceWith(d);
                 color_hex = color_hex[1:]
             return tuple(int(color_hex[i:i+2], 16) for i in (0, 2, 4))
         except (ValueError, IndexError):
-            return None</code></pre>
+            return None
+    
+    def _ensure_window_focus(self):
+        &#34;&#34;&#34;Ensure the game window is focused before sending keyboard input&#34;&#34;&#34;
+        try:
+            import win32gui
+            import win32con
+            
+            # Get the window handle from the mouse controller&#39;s window manager
+            if hasattr(self.mouse_controller, &#39;window_manager&#39;) and self.mouse_controller.window_manager.is_attached():
+                handle = self.mouse_controller.window_manager.attached_handle
+                
+                # Bring window to foreground
+                win32gui.SetForegroundWindow(handle)
+                
+                # Send a brief activation message
+                win32gui.PostMessage(handle, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+                
+                # Small delay to ensure focus is established
+                time.sleep(0.1)
+                
+        except Exception as e:
+            print(f&#34;Warning: Could not ensure window focus: {e}&#34;)
+    
+    def _send_shift_key_alternative(self):
+        &#34;&#34;&#34;Alternative method to send shift key using different approaches&#34;&#34;&#34;
+        try:
+            import win32gui
+            import win32con
+            import win32api
+            
+            # Get the window handle
+            if hasattr(self.mouse_controller, &#39;window_manager&#39;) and self.mouse_controller.window_manager.is_attached():
+                handle = self.mouse_controller.window_manager.attached_handle
+                
+                # Method 1: Try using SendInput API (more direct)
+                try:
+                    import ctypes
+                    from ctypes import wintypes
+                    
+                    # Define input structure
+                    class POINT(ctypes.Structure):
+                        _fields_ = [(&#34;x&#34;, ctypes.c_long), (&#34;y&#34;, ctypes.c_long)]
+                    
+                    class MOUSEINPUT(ctypes.Structure):
+                        _fields_ = [(&#34;dx&#34;, ctypes.c_long),
+                                   (&#34;dy&#34;, ctypes.c_long),
+                                   (&#34;mouseData&#34;, wintypes.DWORD),
+                                   (&#34;dwFlags&#34;, wintypes.DWORD),
+                                   (&#34;time&#34;, wintypes.DWORD),
+                                   (&#34;dwExtraInfo&#34;, ctypes.POINTER(ctypes.c_ulong))]
+                    
+                    class KEYBDINPUT(ctypes.Structure):
+                        _fields_ = [(&#34;wVk&#34;, wintypes.WORD),
+                                   (&#34;wScan&#34;, wintypes.WORD),
+                                   (&#34;dwFlags&#34;, wintypes.DWORD),
+                                   (&#34;time&#34;, wintypes.DWORD),
+                                   (&#34;dwExtraInfo&#34;, ctypes.POINTER(ctypes.c_ulong))]
+                    
+                    class HARDWAREINPUT(ctypes.Structure):
+                        _fields_ = [(&#34;uMsg&#34;, wintypes.DWORD),
+                                   (&#34;wParamL&#34;, wintypes.WORD),
+                                   (&#34;wParamH&#34;, wintypes.WORD)]
+                    
+                    class INPUT(ctypes.Structure):
+                        class _INPUT(ctypes.Union):
+                            _fields_ = [(&#34;ki&#34;, KEYBDINPUT),
+                                       (&#34;mi&#34;, MOUSEINPUT),
+                                       (&#34;hi&#34;, HARDWAREINPUT)]
+                        _anonymous_ = (&#34;_input&#34;,)
+                        _fields_ = [(&#34;type&#34;, wintypes.DWORD),
+                                   (&#34;_input&#34;, _INPUT)]
+                    
+                    # Create input for shift key down
+                    input_down = INPUT()
+                    input_down.type = 1  # INPUT_KEYBOARD
+                    input_down.ki.wVk = win32con.VK_SHIFT
+                    input_down.ki.dwFlags = 0  # Key down
+                    
+                    # Send the input
+                    ctypes.windll.user32.SendInput(1, ctypes.byref(input_down), ctypes.sizeof(INPUT))
+                    return True
+                    
+                except Exception as e:
+                    print(f&#34;SendInput method failed: {e}&#34;)
+                
+                # Method 2: Try using keybd_event (older but sometimes more reliable)
+                try:
+                    win32api.keybd_event(win32con.VK_SHIFT, 0, 0, 0)  # Key down
+                    return True
+                except Exception as e:
+                    print(f&#34;keybd_event method failed: {e}&#34;)
+                
+                # Method 3: Fall back to PostMessage with different parameters
+                try:
+                    # Try with different lParam values
+                    win32gui.PostMessage(handle, win32con.WM_KEYDOWN, win32con.VK_SHIFT, 0x001D0001)
+                    return True
+                except Exception as e:
+                    print(f&#34;PostMessage method failed: {e}&#34;)
+                
+        except Exception as e:
+            print(f&#34;All shift key methods failed: {e}&#34;)
+            return False
+        
+        return False
+    
+    def _release_shift_key_alternative(self):
+        &#34;&#34;&#34;Alternative method to release shift key&#34;&#34;&#34;
+        try:
+            import win32gui
+            import win32con
+            import win32api
+            
+            # Get the window handle
+            if hasattr(self.mouse_controller, &#39;window_manager&#39;) and self.mouse_controller.window_manager.is_attached():
+                handle = self.mouse_controller.window_manager.attached_handle
+                
+                # Method 1: Try using SendInput API
+                try:
+                    import ctypes
+                    from ctypes import wintypes
+                    
+                    # Same structures as above...
+                    class POINT(ctypes.Structure):
+                        _fields_ = [(&#34;x&#34;, ctypes.c_long), (&#34;y&#34;, ctypes.c_long)]
+                    
+                    class MOUSEINPUT(ctypes.Structure):
+                        _fields_ = [(&#34;dx&#34;, ctypes.c_long),
+                                   (&#34;dy&#34;, ctypes.c_long),
+                                   (&#34;mouseData&#34;, wintypes.DWORD),
+                                   (&#34;dwFlags&#34;, wintypes.DWORD),
+                                   (&#34;time&#34;, wintypes.DWORD),
+                                   (&#34;dwExtraInfo&#34;, ctypes.POINTER(ctypes.c_ulong))]
+                    
+                    class KEYBDINPUT(ctypes.Structure):
+                        _fields_ = [(&#34;wVk&#34;, wintypes.WORD),
+                                   (&#34;wScan&#34;, wintypes.WORD),
+                                   (&#34;dwFlags&#34;, wintypes.DWORD),
+                                   (&#34;time&#34;, wintypes.DWORD),
+                                   (&#34;dwExtraInfo&#34;, ctypes.POINTER(ctypes.c_ulong))]
+                    
+                    class HARDWAREINPUT(ctypes.Structure):
+                        _fields_ = [(&#34;uMsg&#34;, wintypes.DWORD),
+                                   (&#34;wParamL&#34;, wintypes.WORD),
+                                   (&#34;wParamH&#34;, wintypes.WORD)]
+                    
+                    class INPUT(ctypes.Structure):
+                        class _INPUT(ctypes.Union):
+                            _fields_ = [(&#34;ki&#34;, KEYBDINPUT),
+                                       (&#34;mi&#34;, MOUSEINPUT),
+                                       (&#34;hi&#34;, HARDWAREINPUT)]
+                        _anonymous_ = (&#34;_input&#34;,)
+                        _fields_ = [(&#34;type&#34;, wintypes.DWORD),
+                                   (&#34;_input&#34;, _INPUT)]
+                    
+                    # Create input for shift key up
+                    input_up = INPUT()
+                    input_up.type = 1  # INPUT_KEYBOARD
+                    input_up.ki.wVk = win32con.VK_SHIFT
+                    input_up.ki.dwFlags = 2  # KEYEVENTF_KEYUP
+                    
+                    # Send the input
+                    ctypes.windll.user32.SendInput(1, ctypes.byref(input_up), ctypes.sizeof(INPUT))
+                    return True
+                    
+                except Exception as e:
+                    print(f&#34;SendInput release method failed: {e}&#34;)
+                
+                # Method 2: Try using keybd_event
+                try:
+                    win32api.keybd_event(win32con.VK_SHIFT, 0, 2, 0)  # Key up (2 = KEYEVENTF_KEYUP)
+                    return True
+                except Exception as e:
+                    print(f&#34;keybd_event release method failed: {e}&#34;)
+                
+                # Method 3: Fall back to PostMessage
+                try:
+                    win32gui.PostMessage(handle, win32con.WM_KEYUP, win32con.VK_SHIFT, 0xC01D0001)
+                    return True
+                except Exception as e:
+                    print(f&#34;PostMessage release method failed: {e}&#34;)
+                
+        except Exception as e:
+            print(f&#34;All shift release methods failed: {e}&#34;)
+            return False
+        
+        return False</code></pre>
 </details>
 <div class="desc"><p>Simple inventory-related automation functions</p></div>
 <h3>Methods</h3>
@@ -250,15 +481,22 @@ el.replaceWith(d);
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def click_slot(self, slot_id: int, button: str = &#34;left&#34;) -&gt; bool:
-    &#34;&#34;&#34;Click on an inventory slot&#34;&#34;&#34;
+    &#34;&#34;&#34;Click on an inventory slot with randomized position&#34;&#34;&#34;
     if not self._is_valid_slot(slot_id):
         return False
     
     slot_data = self.inventory_slots[slot_id]
     x, y = slot_data[&#39;center&#39;]
+    
+    # Add randomization within 3 pixel radius (slots are smaller than general areas)
+    offset_x = random.randint(-3, 3)
+    offset_y = random.randint(-3, 3)
+    x += offset_x
+    y += offset_y
+    
     return self.mouse_controller.click(x, y, button)</code></pre>
 </details>
-<div class="desc"><p>Click on an inventory slot</p></div>
+<div class="desc"><p>Click on an inventory slot with randomized position</p></div>
 </dd>
 <dt id="src.core.scripting_api.inventory_automation.InventoryAutomation.does_color_exist_at_slot"><code class="name flex">
 <span>def <span class="ident">does_color_exist_at_slot</span></span>(<span>self, slot_id: int, color_hex: str, tolerance: int = 10) ‑> bool</span>
@@ -296,15 +534,28 @@ el.replaceWith(d);
     if not slots_to_drop:
         return False
     
-    self.keyboard_controller.key_down(VK.SHIFT)
-    time.sleep(random.uniform(0.05, 0.1))
+    # Ensure window is focused before sending shift key
+    self._ensure_window_focus()
+    
+    # Try alternative shift key method first
+    shift_success = self._send_shift_key_alternative()
+    if not shift_success:
+        # Fall back to original method
+        self.keyboard_controller.key_down(VK.SHIFT)
+    
+    # Wait longer to ensure shift is properly registered before clicking
+    time.sleep(random.uniform(0.3, 0.5))
     
     try:
         for slot_id in slots_to_drop:
             self.click_slot(slot_id, &#34;left&#34;)
             time.sleep(random.uniform(0.1, 0.3))
     finally:
-        self.keyboard_controller.key_up(VK.SHIFT)
+        # Release shift using the same method we used to press it
+        if shift_success:
+            self._release_shift_key_alternative()
+        else:
+            self.keyboard_controller.key_up(VK.SHIFT)
     
     return True</code></pre>
 </details>
@@ -320,15 +571,28 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">def drop_all_items(self) -&gt; bool:
     &#34;&#34;&#34;Drop all items in inventory&#34;&#34;&#34;
-    self.keyboard_controller.key_down(VK.SHIFT)
-    time.sleep(random.uniform(0.05, 0.1))
+    # Ensure window is focused before sending shift key
+    self._ensure_window_focus()
+    
+    # Try alternative shift key method first
+    shift_success = self._send_shift_key_alternative()
+    if not shift_success:
+        # Fall back to original method
+        self.keyboard_controller.key_down(VK.SHIFT)
+    
+    # Wait longer to ensure shift is properly registered before clicking
+    time.sleep(random.uniform(0.3, 0.5))
     
     try:
         for slot_id in range(len(self.inventory_slots)):
             self.click_slot(slot_id, &#34;left&#34;)
             time.sleep(random.uniform(0.03, 0.1))
     finally:
-        self.keyboard_controller.key_up(VK.SHIFT)
+        # Release shift using the same method we used to press it
+        if shift_success:
+            self._release_shift_key_alternative()
+        else:
+            self.keyboard_controller.key_up(VK.SHIFT)
     
     return True</code></pre>
 </details>

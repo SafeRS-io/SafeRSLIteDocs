@@ -81,13 +81,20 @@ el.replaceWith(d);
         pass
     
     def click_spell(self, slot_id: int, button: str = &#34;left&#34;) -&gt; bool:
-        &#34;&#34;&#34;Click on a spellbook slot&#34;&#34;&#34;
+        &#34;&#34;&#34;Click on a spellbook slot with randomized position&#34;&#34;&#34;
         if slot_id &lt; 0 or slot_id &gt;= len(self.spellbook_slots):
             print(f&#34;Invalid spell slot ID: {slot_id}&#34;)
             return False
         
         slot_data = self.spellbook_slots[slot_id]
         x, y = slot_data[&#39;center&#39;]
+        
+        # Add randomization within 3 pixel radius (spell slots are similar size to inventory slots)
+        offset_x = random.randint(-3, 3)
+        offset_y = random.randint(-3, 3)
+        x += offset_x
+        y += offset_y
+        
         return self.mouse_controller.click(x, y, button)
     
     def wait_for_color_at_spell(self, slot_id: int, color_hex: str, tolerance: int = 10, timeout: float = 10.0, is_running_callback: Optional[callable] = None) -&gt; bool:
@@ -226,16 +233,23 @@ el.replaceWith(d);
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def click_spell(self, slot_id: int, button: str = &#34;left&#34;) -&gt; bool:
-    &#34;&#34;&#34;Click on a spellbook slot&#34;&#34;&#34;
+    &#34;&#34;&#34;Click on a spellbook slot with randomized position&#34;&#34;&#34;
     if slot_id &lt; 0 or slot_id &gt;= len(self.spellbook_slots):
         print(f&#34;Invalid spell slot ID: {slot_id}&#34;)
         return False
     
     slot_data = self.spellbook_slots[slot_id]
     x, y = slot_data[&#39;center&#39;]
+    
+    # Add randomization within 3 pixel radius (spell slots are similar size to inventory slots)
+    offset_x = random.randint(-3, 3)
+    offset_y = random.randint(-3, 3)
+    x += offset_x
+    y += offset_y
+    
     return self.mouse_controller.click(x, y, button)</code></pre>
 </details>
-<div class="desc"><p>Click on a spellbook slot</p></div>
+<div class="desc"><p>Click on a spellbook slot with randomized position</p></div>
 </dd>
 <dt id="src.core.scripting_api.spellbook_automation.SpellbookAutomation.does_color_exist_at_spell"><code class="name flex">
 <span>def <span class="ident">does_color_exist_at_spell</span></span>(<span>self, slot_id: int, color_hex: str, tolerance: int = 10) ‑> bool</span>

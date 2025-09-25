@@ -280,4 +280,83 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Copy fisher script to clipboard functionality
+    const copyFisherButton = document.getElementById('copy-fisher-btn');
+    if (copyFisherButton) {
+        copyFisherButton.addEventListener('click', function() {
+            const codeBlock = document.querySelector('#fisher-example .code-block');
+            const codeText = codeBlock.textContent || codeBlock.innerText;
+            
+            navigator.clipboard.writeText(codeText).then(function() {
+                const button = document.getElementById('copy-fisher-btn');
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copied!';
+                button.style.background = 'linear-gradient(135deg, #34d399, #10b981)';
+                
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                }, 2000);
+            });
+        });
+    }
+
+    // Copy stalls script to clipboard functionality
+    const copyStallsButton = document.getElementById('copy-stalls-btn');
+    if (copyStallsButton) {
+        copyStallsButton.addEventListener('click', function() {
+            const codeBlock = document.querySelector('#stalls-example .code-block');
+            const codeText = codeBlock.textContent || codeBlock.innerText;
+            
+            navigator.clipboard.writeText(codeText).then(function() {
+                const button = document.getElementById('copy-stalls-btn');
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copied!';
+                button.style.background = 'linear-gradient(135deg, #34d399, #10b981)';
+                
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                }, 2000);
+            });
+        });
+    }
 });
+
+// Example tab switching functionality
+function showExample(exampleType) {
+    console.log('Switching to example:', exampleType); // Debug log
+    
+    // Hide all example contents
+    document.querySelectorAll('.example-content').forEach(content => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+    });
+    
+    // Remove active class from all tabs
+    document.querySelectorAll('.example-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Show selected example
+    const selectedExample = document.getElementById(exampleType + '-example');
+    if (selectedExample) {
+        selectedExample.classList.add('active');
+        selectedExample.style.display = 'block';
+        console.log('Showing example:', exampleType); // Debug log
+    } else {
+        console.error('Could not find example element:', exampleType + '-example');
+    }
+    
+    // Add active class to clicked tab (using event if available, otherwise find by text)
+    if (typeof event !== 'undefined' && event.target) {
+        event.target.classList.add('active');
+    } else {
+        // Fallback: find the tab by matching the onclick attribute
+        const targetTab = document.querySelector(`[onclick="showExample('${exampleType}')"]`);
+        if (targetTab) {
+            targetTab.classList.add('active');
+        }
+    }
+}

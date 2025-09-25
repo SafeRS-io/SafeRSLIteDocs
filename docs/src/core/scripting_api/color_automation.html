@@ -112,15 +112,72 @@ el.replaceWith(d);
     
     def find_and_click_color(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
                             button: str = &#34;left&#34;, center_out: bool = False) -&gt; bool:
-        &#34;&#34;&#34;Find and click the center of a color in an area&#34;&#34;&#34;
+        &#34;&#34;&#34;Find and click the center of a color in an area with randomized position&#34;&#34;&#34;
         coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
         
         if coordinates:
-            # Use the first (most prominent) coordinate
-            x, y = coordinates[0]
+            # Calculate center of all found coordinates
+            if len(coordinates) == 1:
+                x, y = coordinates[0]
+            else:
+                # Calculate average position (center of all found pixels)
+                avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+                avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+                x, y = avg_x, avg_y
+            
+            # Add randomization within 5 pixel radius
+            import random
+            offset_x = random.randint(-5, 5)
+            offset_y = random.randint(-5, 5)
+            x += offset_x
+            y += offset_y
+            
             return self.mouse_controller.click(x, y, button)
         
         return False
+    
+    def find_color_center(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
+                         center_out: bool = False) -&gt; Optional[Tuple[int, int]]:
+        &#34;&#34;&#34;Find the center coordinates of a color in an area&#34;&#34;&#34;
+        coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
+        
+        if coordinates:
+            # Calculate center of all found coordinates
+            if len(coordinates) == 1:
+                return coordinates[0]
+            else:
+                # Calculate average position (center of all found pixels)
+                avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+                avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+                return (avg_x, avg_y)
+        
+        return None
+    
+    def find_color_center_randomized(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
+                                   center_out: bool = False, random_range: int = 5) -&gt; Optional[Tuple[int, int]]:
+        &#34;&#34;&#34;Find the center coordinates of a color in an area with randomization&#34;&#34;&#34;
+        coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
+        
+        if coordinates:
+            # Calculate center of all found coordinates
+            if len(coordinates) == 1:
+                x, y = coordinates[0]
+            else:
+                # Calculate average position (center of all found pixels)
+                avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+                avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+                x, y = avg_x, avg_y
+            
+            # Add randomization within specified range
+            import random
+            offset_x = random.randint(-random_range, random_range)
+            offset_y = random.randint(-random_range, random_range)
+            x += offset_x
+            y += offset_y
+            
+            return (x, y)
+        
+        return None
     
     def get_color_at_position(self, x: int, y: int) -&gt; Optional[Tuple[int, int, int]]:
         &#34;&#34;&#34;Get RGB color at specific position&#34;&#34;&#34;
@@ -128,9 +185,20 @@ el.replaceWith(d);
     
     def find_color_in_area(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
                           center_out: bool = False) -&gt; Optional[Tuple[int, int]]:
-        &#34;&#34;&#34;Find color in area and return first coordinate&#34;&#34;&#34;
+        &#34;&#34;&#34;Find color in area and return center coordinate&#34;&#34;&#34;
         coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
-        return coordinates[0] if coordinates else None
+        
+        if coordinates:
+            # Calculate center of all found coordinates
+            if len(coordinates) == 1:
+                return coordinates[0]
+            else:
+                # Calculate average position (center of all found pixels)
+                avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+                avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+                return (avg_x, avg_y)
+        
+        return None
     
     def find_color_closest_to_center(self, area: Union[Dict, str], color_hex: str, 
                                    tolerance: int = 10) -&gt; Optional[Tuple[int, int]]:
@@ -145,25 +213,6 @@ el.replaceWith(d);
             return None
         
         return self.color_scanner.find_color_closest_to_center(area_bounds, color_rgb, tolerance)
-    
-    def scan_orb_status(self, orb_area: Union[Dict, str], status_colors: Dict[str, str], 
-                       tolerance: int = 10) -&gt; Dict[str, bool]:
-        &#34;&#34;&#34;Scan an orb area for different status colors&#34;&#34;&#34;
-        if not self._is_circular_area(orb_area):
-            return {}
-        
-        area_bounds = self._get_area_bounds(orb_area)
-        if not area_bounds:
-            return {}
-        
-        # Convert hex colors to RGB
-        rgb_colors = {}
-        for status_name, color_hex in status_colors.items():
-            color_rgb = self._hex_to_rgb(color_hex)
-            if color_rgb:
-                rgb_colors[status_name] = color_rgb
-        
-        return self.color_scanner.scan_orb_for_status(area_bounds, rgb_colors, tolerance)
     
     def get_all_colors_in_area(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
                               center_out: bool = False) -&gt; List[Tuple[int, int]]:
@@ -283,17 +332,94 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">def find_and_click_color(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
                         button: str = &#34;left&#34;, center_out: bool = False) -&gt; bool:
-    &#34;&#34;&#34;Find and click the center of a color in an area&#34;&#34;&#34;
+    &#34;&#34;&#34;Find and click the center of a color in an area with randomized position&#34;&#34;&#34;
     coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
     
     if coordinates:
-        # Use the first (most prominent) coordinate
-        x, y = coordinates[0]
+        # Calculate center of all found coordinates
+        if len(coordinates) == 1:
+            x, y = coordinates[0]
+        else:
+            # Calculate average position (center of all found pixels)
+            avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+            avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+            x, y = avg_x, avg_y
+        
+        # Add randomization within 5 pixel radius
+        import random
+        offset_x = random.randint(-5, 5)
+        offset_y = random.randint(-5, 5)
+        x += offset_x
+        y += offset_y
+        
         return self.mouse_controller.click(x, y, button)
     
     return False</code></pre>
 </details>
-<div class="desc"><p>Find and click the center of a color in an area</p></div>
+<div class="desc"><p>Find and click the center of a color in an area with randomized position</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.find_color_center"><code class="name flex">
+<span>def <span class="ident">find_color_center</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>center_out: bool = False) ‑> Tuple[int, int] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_color_center(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
+                     center_out: bool = False) -&gt; Optional[Tuple[int, int]]:
+    &#34;&#34;&#34;Find the center coordinates of a color in an area&#34;&#34;&#34;
+    coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
+    
+    if coordinates:
+        # Calculate center of all found coordinates
+        if len(coordinates) == 1:
+            return coordinates[0]
+        else:
+            # Calculate average position (center of all found pixels)
+            avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+            avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+            return (avg_x, avg_y)
+    
+    return None</code></pre>
+</details>
+<div class="desc"><p>Find the center coordinates of a color in an area</p></div>
+</dd>
+<dt id="src.core.scripting_api.color_automation.ColorAutomation.find_color_center_randomized"><code class="name flex">
+<span>def <span class="ident">find_color_center_randomized</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>center_out: bool = False,<br>random_range: int = 5) ‑> Tuple[int, int] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_color_center_randomized(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
+                               center_out: bool = False, random_range: int = 5) -&gt; Optional[Tuple[int, int]]:
+    &#34;&#34;&#34;Find the center coordinates of a color in an area with randomization&#34;&#34;&#34;
+    coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
+    
+    if coordinates:
+        # Calculate center of all found coordinates
+        if len(coordinates) == 1:
+            x, y = coordinates[0]
+        else:
+            # Calculate average position (center of all found pixels)
+            avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+            avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+            x, y = avg_x, avg_y
+        
+        # Add randomization within specified range
+        import random
+        offset_x = random.randint(-random_range, random_range)
+        offset_y = random.randint(-random_range, random_range)
+        x += offset_x
+        y += offset_y
+        
+        return (x, y)
+    
+    return None</code></pre>
+</details>
+<div class="desc"><p>Find the center coordinates of a color in an area with randomization</p></div>
 </dd>
 <dt id="src.core.scripting_api.color_automation.ColorAutomation.find_color_closest_to_center"><code class="name flex">
 <span>def <span class="ident">find_color_closest_to_center</span></span>(<span>self, area: Dict | str, color_hex: str, tolerance: int = 10) ‑> Tuple[int, int] | None</span>
@@ -329,11 +455,22 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">def find_color_in_area(self, area: Union[Dict, str], color_hex: str, tolerance: int = 10, 
                       center_out: bool = False) -&gt; Optional[Tuple[int, int]]:
-    &#34;&#34;&#34;Find color in area and return first coordinate&#34;&#34;&#34;
+    &#34;&#34;&#34;Find color in area and return center coordinate&#34;&#34;&#34;
     coordinates = self._find_color_coordinates(area, color_hex, tolerance, center_out)
-    return coordinates[0] if coordinates else None</code></pre>
+    
+    if coordinates:
+        # Calculate center of all found coordinates
+        if len(coordinates) == 1:
+            return coordinates[0]
+        else:
+            # Calculate average position (center of all found pixels)
+            avg_x = sum(coord[0] for coord in coordinates) // len(coordinates)
+            avg_y = sum(coord[1] for coord in coordinates) // len(coordinates)
+            return (avg_x, avg_y)
+    
+    return None</code></pre>
 </details>
-<div class="desc"><p>Find color in area and return first coordinate</p></div>
+<div class="desc"><p>Find color in area and return center coordinate</p></div>
 </dd>
 <dt id="src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_area"><code class="name flex">
 <span>def <span class="ident">get_all_colors_in_area</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>center_out: bool = False) ‑> List[Tuple[int, int]]</span>
@@ -378,35 +515,6 @@ el.replaceWith(d);
     return self.color_scanner.get_color_at_position(x, y)</code></pre>
 </details>
 <div class="desc"><p>Get RGB color at specific position</p></div>
-</dd>
-<dt id="src.core.scripting_api.color_automation.ColorAutomation.scan_orb_status"><code class="name flex">
-<span>def <span class="ident">scan_orb_status</span></span>(<span>self, orb_area: Dict | str, status_colors: Dict[str, str], tolerance: int = 10) ‑> Dict[str, bool]</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def scan_orb_status(self, orb_area: Union[Dict, str], status_colors: Dict[str, str], 
-                   tolerance: int = 10) -&gt; Dict[str, bool]:
-    &#34;&#34;&#34;Scan an orb area for different status colors&#34;&#34;&#34;
-    if not self._is_circular_area(orb_area):
-        return {}
-    
-    area_bounds = self._get_area_bounds(orb_area)
-    if not area_bounds:
-        return {}
-    
-    # Convert hex colors to RGB
-    rgb_colors = {}
-    for status_name, color_hex in status_colors.items():
-        color_rgb = self._hex_to_rgb(color_hex)
-        if color_rgb:
-            rgb_colors[status_name] = color_rgb
-    
-    return self.color_scanner.scan_orb_for_status(area_bounds, rgb_colors, tolerance)</code></pre>
-</details>
-<div class="desc"><p>Scan an orb area for different status colors</p></div>
 </dd>
 <dt id="src.core.scripting_api.color_automation.ColorAutomation.wait_for_color"><code class="name flex">
 <span>def <span class="ident">wait_for_color</span></span>(<span>self,<br>area: Dict | str,<br>color_hex: str,<br>tolerance: int = 10,<br>timeout: float = 10.0,<br>is_running_callback: Callable | None = None,<br>center_out: bool = False) ‑> bool</span>
@@ -516,12 +624,13 @@ but give up entirely after timeout[1] seconds.</p></div>
 <ul class="">
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.does_color_exist" href="#src.core.scripting_api.color_automation.ColorAutomation.does_color_exist">does_color_exist</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_and_click_color" href="#src.core.scripting_api.color_automation.ColorAutomation.find_and_click_color">find_and_click_color</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_color_center" href="#src.core.scripting_api.color_automation.ColorAutomation.find_color_center">find_color_center</a></code></li>
+<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_color_center_randomized" href="#src.core.scripting_api.color_automation.ColorAutomation.find_color_center_randomized">find_color_center_randomized</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_color_closest_to_center" href="#src.core.scripting_api.color_automation.ColorAutomation.find_color_closest_to_center">find_color_closest_to_center</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.find_color_in_area" href="#src.core.scripting_api.color_automation.ColorAutomation.find_color_in_area">find_color_in_area</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_area" href="#src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_area">get_all_colors_in_area</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_circle" href="#src.core.scripting_api.color_automation.ColorAutomation.get_all_colors_in_circle">get_all_colors_in_circle</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.get_color_at_position" href="#src.core.scripting_api.color_automation.ColorAutomation.get_color_at_position">get_color_at_position</a></code></li>
-<li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.scan_orb_status" href="#src.core.scripting_api.color_automation.ColorAutomation.scan_orb_status">scan_orb_status</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.wait_for_color" href="#src.core.scripting_api.color_automation.ColorAutomation.wait_for_color">wait_for_color</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.wait_for_gained_xp" href="#src.core.scripting_api.color_automation.ColorAutomation.wait_for_gained_xp">wait_for_gained_xp</a></code></li>
 <li><code><a title="src.core.scripting_api.color_automation.ColorAutomation.wait_for_xp_gain" href="#src.core.scripting_api.color_automation.ColorAutomation.wait_for_xp_gain">wait_for_xp_gain</a></code></li>

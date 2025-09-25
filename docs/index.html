@@ -389,10 +389,17 @@
                 </div>
             </div>
 
-            <h2>💻 Code Examples <span id="examples-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
+            <h2>💻 Free Scripts <span id="examples-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
             <div class="template-section" id="examples-content" style="display: none;">
-                <h3>Simple Woodcutter Script</h3>
-                <p>This example demonstrates a complete woodcutting automation script that cuts trees and drops logs:</p>
+                <div class="example-tabs">
+                    <button class="example-tab active" onclick="showExample('woodcutter')">🪓 Woodcutter</button>
+                    <button class="example-tab" onclick="showExample('fisher')">🎣 Fisher</button>
+                    <button class="example-tab" onclick="showExample('stalls')">🏪 Stalls</button>
+                </div>
+                
+                <div id="woodcutter-example" class="example-content active" style="display: block;">
+                    <h3>Simple Woodcutter Script</h3>
+                    <p>This example demonstrates a complete woodcutting automation script that cuts trees and drops logs:</p>
                 
                 <pre class="code-block"><span style="color: #6A9955;"># SafeRS Lite BaseScript Template</span>
 <span style="color: #6A9955;"># Create a script class that inherits from BaseScript</span>
@@ -436,7 +443,7 @@
         <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Setting up Basic Woodcutter..."</span>)
         
         <span style="color: #6A9955;"># Check if required automation modules are available</span>
-        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #4EC9B0;">hasattr</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #CE9178;">'inventory'</span>):
+        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #4EC9B0;">hasattr</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #CE9178;">'inventory_automation'</span>):
             <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"ERROR: Inventory automation not available"</span>)
             <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">False</span>
         
@@ -571,6 +578,370 @@
                         <li><strong>Human-like Timing:</strong> Random delays between actions for natural, undetectable behavior</li>
                         <li><strong>Smart Dropping:</strong> Holds Shift key throughout entire dropping sequence for efficient log removal</li>
                     </ul>
+                </div>
+                </div>
+                
+                <div id="fisher-example" class="example-content" style="display: none;">
+                    <h3>Simple Fisher Script</h3>
+                    <p>This example demonstrates a complete fishing automation script that catches fish and drops unwanted ones:</p>
+                
+                <pre class="code-block"><span style="color: #6A9955;"># SafeRS Lite BaseScript Template</span>
+<span style="color: #6A9955;"># Create a script class that inherits from BaseScript</span>
+
+<span style="color: #569CD6;">from</span> <span style="color: #9CDCFE;">internal_scripts</span>.<span style="color: #9CDCFE;">base_script</span> <span style="color: #569CD6;">import</span> <span style="color: #4EC9B0;">BaseScript</span>
+
+<span style="color: #569CD6;">class</span> <span style="color: #4EC9B0;">SimpleFisher</span>(<span style="color: #4EC9B0;">BaseScript</span>):
+    <span style="color: #6A9955;">"""
+    Simple Fisher - Fished and drops unwanted fish
+    """</span>
+    <span style="color: #569CD6;">class</span> <span style="color: #4EC9B0;">FisherStates</span>(<span style="color: #4EC9B0;">enum</span>.<span style="color: #4EC9B0;">Enum</span>):
+        <span style="color: #4EC9B0;">FISHING</span> = <span style="color: #CE9178;">"Fishing"</span>
+        <span style="color: #4EC9B0;">DROPPING_FISH</span> = <span style="color: #CE9178;">"Dropping Fish"</span>
+        <span style="color: #4EC9B0;">CHECKING_INVENTORY</span> = <span style="color: #CE9178;">"Checking Inventory"</span>
+        
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">__init__</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #4EC9B0;">super</span>().<span style="color: #DCDCAA;">__init__</span>(
+            <span style="color: #9CDCFE;">name</span>=<span style="color: #CE9178;">"Simple Fisher"</span>,
+            <span style="color: #9CDCFE;">description</span>=<span style="color: #CE9178;">"Fished and drops unwanted fish"</span>,
+            <span style="color: #9CDCFE;">version</span>=<span style="color: #CE9178;">"1.0"</span>
+        )
+        
+        <span style="color: #6A9955;"># Set script metadata</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">metadata</span>.<span style="color: #DCDCAA;">update</span>({
+            <span style="color: #CE9178;">'category'</span>: <span style="color: #CE9178;">'skilling'</span>,
+            <span style="color: #CE9178;">'tags'</span>: [<span style="color: #CE9178;">'fishing'</span>, <span style="color: #CE9178;">'afk'</span>],
+            <span style="color: #CE9178;">'requirements'</span>: []
+        })
+        
+        <span style="color: #6A9955;"># Script-specific variables</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">fish_color</span> = <span style="color: #CE9178;">"#00FF00"</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">fish_inventory_color</span> = <span style="color: #CE9178;">"#0000FF"</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">xp_drop_color</span> = <span style="color: #CE9178;">"#9fa399"</span>
+
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">setup</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">bool</span>:
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Setting up Basic Fisher..."</span>)
+        
+        <span style="color: #6A9955;"># Check if required automation modules are available</span>
+        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #4EC9B0;">hasattr</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #CE9178;">'inventory_automation'</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"ERROR: Inventory automation not available"</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">False</span>
+        
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Setup completed successfully"</span>)
+        <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">True</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">execute_iteration</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">bool</span>:
+        <span style="color: #6A9955;">"""
+        Execute one iteration of the script
+        This is where your main script logic goes
+        """</span>
+        <span style="color: #569CD6;">try</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Current state: {self.state}"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">execute_state</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">True</span>  <span style="color: #6A9955;"># Continue execution</span>
+            
+        <span style="color: #569CD6;">except</span> <span style="color: #4EC9B0;">Exception</span> <span style="color: #569CD6;">as</span> <span style="color: #9CDCFE;">e</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"ERROR in execute_iteration: {str(e)}"</span>)
+            <span style="color: #569CD6;">import</span> <span style="color: #9CDCFE;">traceback</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Traceback: {traceback.format_exc()}"</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">False</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">cleanup</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">None</span>:
+        <span style="color: #6A9955;">"""
+        Cleanup method called after script execution
+        Clean up any resources used by the script
+        """</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Cleaning up MyScript..."</span>)
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Script finished"</span>)
+
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">execute_state</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #9CDCFE;">state</span>: <span style="color: #4EC9B0;">FisherStates</span>):
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">FISHING</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Fishing"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_fishing</span>()
+        <span style="color: #569CD6;">elif</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">DROPPING_FISH</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Dropping Fish"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_dropping_fish</span>()
+        <span style="color: #569CD6;">elif</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking Inventory"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_checking_inventory</span>()
+            
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_checking_inventory</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking Inventory"</span>)
+        <span style="color: #6A9955;"># Check if inventory is full</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking inventory..."</span>)
+        <span style="color: #9CDCFE;">last_slot</span> = <span style="color: #4EC9B0;">len</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>) - <span style="color: #B5CEA8;">1</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Checking last slot {last_slot} for fish color {self.fish_inventory_color}"</span>)
+        <span style="color: #9CDCFE;">slot_data</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>[<span style="color: #9CDCFE;">last_slot</span>]
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Last slot data: {slot_data}"</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">does_color_exist_at_slot</span>(<span style="color: #9CDCFE;">last_slot</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">fish_inventory_color</span>, <span style="color: #B5CEA8;">10</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Inventory full, switching to dropping state"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">DROPPING_FISH</span>
+        <span style="color: #569CD6;">else</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Inventory not full, continuing to cut"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">FISHING</span>
+            
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_fishing</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Fishing"</span>)
+        
+        <span style="color: #569CD6;">try</span>:
+            <span style="color: #6A9955;"># Fish detection and clicking</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Looking for fish..."</span>)
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">color</span>.<span style="color: #DCDCAA;">find_and_click_color</span>(<span style="color: #CE9178;">"play_area"</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">fish_color</span>, <span style="color: #B5CEA8;">10</span>, <span style="color: #CE9178;">"left"</span>, <span style="color: #569CD6;">True</span>):
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Clicked Fish"</span>)
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            <span style="color: #6A9955;"># Wait for XP to be gained</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Waiting for XP..."</span>)
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">color</span>.<span style="color: #DCDCAA;">wait_for_xp_gain</span>(<span style="color: #CE9178;">"xp_drop"</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">xp_drop_color</span>, <span style="color: #B5CEA8;">5</span>, <span style="color: #B5CEA8;">5.0</span>):
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"XP gained successfully"</span>)
+            <span style="color: #569CD6;">else</span>:
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Failed to gain XP"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>
+        
+        <span style="color: #569CD6;">except</span> <span style="color: #4EC9B0;">Exception</span> <span style="color: #569CD6;">as</span> <span style="color: #9CDCFE;">e</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"ERROR in handle_fishing: {str(e)}"</span>)
+            <span style="color: #569CD6;">import</span> <span style="color: #9CDCFE;">traceback</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Traceback: {traceback.format_exc()}"</span>)
+                
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_dropping_fish</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Dropping Fish"</span>)
+        <span style="color: #6A9955;"># Drop all fish with blue color from inventory</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Looking for color {self.fish_inventory_color} in inventory..."</span>)
+        
+        <span style="color: #6A9955;"># First, let's check which slots actually have the color</span>
+        <span style="color: #9CDCFE;">slots_with_color</span> = []
+        <span style="color: #569CD6;">for</span> <span style="color: #9CDCFE;">slot_id</span> <span style="color: #569CD6;">in</span> <span style="color: #4EC9B0;">range</span>(<span style="color: #4EC9B0;">len</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>)):
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">does_color_exist_at_slot</span>(<span style="color: #9CDCFE;">slot_id</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">fish_inventory_color</span>, <span style="color: #B5CEA8;">10</span>):
+                <span style="color: #9CDCFE;">slots_with_color</span>.<span style="color: #DCDCAA;">append</span>(<span style="color: #9CDCFE;">slot_id</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #9CDCFE;">slots_with_color</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"No slots found with target color, switching to fishing"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">FISHING</span>
+            <span style="color: #569CD6;">return</span>
+        
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Found {len(slots_with_color)} slots with color: {slots_with_color}"</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">drop_all_color</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">fish_inventory_color</span>, <span style="color: #B5CEA8;">10</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Fish dropped successfully"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">FisherStates</span>.<span style="color: #4EC9B0;">FISHING</span>
+        <span style="color: #569CD6;">else</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Failed to drop fish"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">stop_script</span>()</pre>
+                
+                <div style="margin: 15px 0; text-align: center;">
+                    <button id="copy-fisher-btn" style="
+                        background: linear-gradient(135deg, #10b981, #34d399);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(16, 185, 129, 0.3)'">
+                        📋 Copy Fisher Script to Clipboard
+                    </button>
+                </div>
+                
+                <div class="highlight">
+                    <strong>💡 Script Features:</strong>
+                    <ul style="color: #d1d5db; margin: 15px 0;">
+                        <li><strong>Automated Fishing:</strong> Uses state management (FISHING, CHECKING_INVENTORY, DROPPING_FISH) for efficient fishing cycles</li>
+                        <li><strong>Smart Fish Detection:</strong> Finds fishing spots by green color (#00FF00) and fish in inventory by blue color (#0000FF)</li>
+                        <li><strong>XP Monitoring:</strong> Waits for XP drops (#9fa399) to confirm successful fishing actions</li>
+                        <li><strong>Inventory Management:</strong> Automatically checks last slot to detect when inventory is full</li>
+                        <li><strong>Selective Dropping:</strong> Only drops unwanted fish while keeping desired items</li>
+                        <li><strong>Efficient Shift Dropping:</strong> Uses advanced shift key handling for reliable item dropping</li>
+                        <li><strong>Human-like Behavior:</strong> Random delays and randomized click positions for natural automation</li>
+                        <li><strong>Error Handling:</strong> Comprehensive error catching with detailed logging for troubleshooting</li>
+                    </ul>
+                </div>
+                </div>
+                
+                <div id="stalls-example" class="example-content" style="display: none;">
+                    <h3>Simple Stalls Script</h3>
+                    <p>This example demonstrates a complete thieving automation script that steals from stalls and drops unwanted items:</p>
+                
+                <pre class="code-block"><span style="color: #6A9955;"># SafeRS Lite Simple Stalls</span>
+<span style="color: #6A9955;"># Create a script class that inherits from BaseScript</span>
+
+<span style="color: #569CD6;">from</span> <span style="color: #9CDCFE;">internal_scripts</span>.<span style="color: #9CDCFE;">base_script</span> <span style="color: #569CD6;">import</span> <span style="color: #4EC9B0;">BaseScript</span>
+<span style="color: #569CD6;">import</span> <span style="color: #9CDCFE;">enum</span>
+
+<span style="color: #569CD6;">class</span> <span style="color: #4EC9B0;">SimpleStalls</span>(<span style="color: #4EC9B0;">BaseScript</span>):
+    <span style="color: #6A9955;">"""
+    Simple Stall Thievery - Thieves stalls and drops unwanted items
+    """</span>
+    <span style="color: #569CD6;">class</span> <span style="color: #4EC9B0;">StallsStates</span>(<span style="color: #4EC9B0;">enum</span>.<span style="color: #4EC9B0;">Enum</span>):
+        <span style="color: #4EC9B0;">THIEVING_STALLS</span> = <span style="color: #CE9178;">"Thieving Stalls"</span>
+        <span style="color: #4EC9B0;">DROPPING_UNWANTED_ITEMS</span> = <span style="color: #CE9178;">"Dropping Unwanted Items"</span>
+        <span style="color: #4EC9B0;">CHECKING_INVENTORY</span> = <span style="color: #CE9178;">"Checking Inventory"</span>
+        
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">__init__</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #4EC9B0;">super</span>().<span style="color: #DCDCAA;">__init__</span>(
+            <span style="color: #9CDCFE;">name</span>=<span style="color: #CE9178;">"Simple Stalls"</span>,
+            <span style="color: #9CDCFE;">description</span>=<span style="color: #CE9178;">"Thieves stalls and drops unwanted items"</span>,
+            <span style="color: #9CDCFE;">version</span>=<span style="color: #CE9178;">"1.0"</span>
+        )
+        
+        <span style="color: #6A9955;"># Set script metadata</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">metadata</span>.<span style="color: #DCDCAA;">update</span>({
+            <span style="color: #CE9178;">'category'</span>: <span style="color: #CE9178;">'skilling'</span>,
+            <span style="color: #CE9178;">'tags'</span>: [<span style="color: #CE9178;">'thieving'</span>, <span style="color: #CE9178;">'afk'</span>],
+            <span style="color: #CE9178;">'requirements'</span>: []
+        })
+        
+        <span style="color: #6A9955;"># Script-specific variables</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">stall_color</span> = <span style="color: #CE9178;">"#00FF00"</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">unwanted_item_color</span> = <span style="color: #CE9178;">"#0000FF"</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">xp_drop_color</span> = <span style="color: #CE9178;">"#FFFFFF"</span>
+
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">setup</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">bool</span>:
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Setting up Basic Woodcutter..."</span>)
+        
+        <span style="color: #6A9955;"># Check if required automation modules are available</span>
+        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #4EC9B0;">hasattr</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #CE9178;">'inventory_automation'</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"ERROR: Inventory automation not available"</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">False</span>
+
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Setup completed successfully"</span>)
+        <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">True</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">execute_iteration</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">bool</span>:
+        <span style="color: #6A9955;">"""
+        Execute one iteration of the script
+        This is where your main script logic goes
+        """</span>
+        <span style="color: #569CD6;">try</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Current state: {self.state}"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">execute_state</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">True</span>  <span style="color: #6A9955;"># Continue execution</span>
+            
+        <span style="color: #569CD6;">except</span> <span style="color: #4EC9B0;">Exception</span> <span style="color: #569CD6;">as</span> <span style="color: #9CDCFE;">e</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"ERROR in execute_iteration: {str(e)}"</span>)
+            <span style="color: #569CD6;">import</span> <span style="color: #9CDCFE;">traceback</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Traceback: {traceback.format_exc()}"</span>)
+            <span style="color: #569CD6;">return</span> <span style="color: #569CD6;">False</span>
+    
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">cleanup</span>(<span style="color: #9CDCFE;">self</span>) -> <span style="color: #4EC9B0;">None</span>:
+        <span style="color: #6A9955;">"""
+        Cleanup method called after script execution
+        Clean up any resources used by the script
+        """</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Cleaning up MyScript..."</span>)
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Script finished"</span>)
+
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">execute_state</span>(<span style="color: #9CDCFE;">self</span>, <span style="color: #9CDCFE;">state</span>: <span style="color: #4EC9B0;">StallsStates</span>):
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">THIEVING_STALLS</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Thieving Stalls"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_thieving_stalls</span>()
+        <span style="color: #569CD6;">elif</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">DROPPING_UNWANTED_ITEMS</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Dropping Unwanted Items"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_dropping_unwanted_items</span>()
+        <span style="color: #569CD6;">elif</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> == <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking Inventory"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">handle_checking_inventory</span>()
+            
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_checking_inventory</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking Inventory"</span>)
+        <span style="color: #6A9955;"># Check if inventory is full</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Checking inventory..."</span>)
+        <span style="color: #9CDCFE;">last_slot</span> = <span style="color: #4EC9B0;">len</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>) - <span style="color: #B5CEA8;">1</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Checking last slot {last_slot} for unwanted item color {self.unwanted_item_color}"</span>)
+        <span style="color: #9CDCFE;">slot_data</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>[<span style="color: #9CDCFE;">last_slot</span>]
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Last slot data: {slot_data}"</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">does_color_exist_at_slot</span>(<span style="color: #9CDCFE;">last_slot</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">unwanted_item_color</span>, <span style="color: #B5CEA8;">10</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Inventory full, switching to dropping state"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">DROPPING_UNWANTED_ITEMS</span>
+        <span style="color: #569CD6;">else</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Inventory not full, continuing to thieve"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">THIEVING_STALLS</span>
+            
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_thieving_stalls</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Thieving Stalls"</span>)
+        
+        <span style="color: #569CD6;">try</span>:
+            <span style="color: #6A9955;"># Stall detection and clicking</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Looking for stalls..."</span>)
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">color</span>.<span style="color: #DCDCAA;">find_and_click_color</span>(<span style="color: #CE9178;">"play_area"</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">stall_color</span>, <span style="color: #B5CEA8;">10</span>, <span style="color: #CE9178;">"left"</span>, <span style="color: #569CD6;">True</span>):
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Clicked Stall"</span>)   
+            <span style="color: #6A9955;"># Wait for XP to be gained</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Waiting for XP..."</span>)
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">color</span>.<span style="color: #DCDCAA;">wait_for_gained_xp</span>(<span style="color: #CE9178;">"xp_drop"</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">xp_drop_color</span>, <span style="color: #B5CEA8;">5</span>, <span style="color: #B5CEA8;">5.0</span>):
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"XP gained successfully"</span>)
+                <span style="color: #9CDCFE;">time</span>.<span style="color: #DCDCAA;">sleep</span>(<span style="color: #9CDCFE;">random</span>.<span style="color: #DCDCAA;">uniform</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>))
+            <span style="color: #569CD6;">else</span>:
+                <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Failed to gain XP"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">CHECKING_INVENTORY</span>
+        
+        <span style="color: #569CD6;">except</span> <span style="color: #4EC9B0;">Exception</span> <span style="color: #569CD6;">as</span> <span style="color: #9CDCFE;">e</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"ERROR in handle_thieving_stalls: {str(e)}"</span>)
+            <span style="color: #569CD6;">import</span> <span style="color: #9CDCFE;">traceback</span>
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Traceback: {traceback.format_exc()}"</span>)
+                
+    <span style="color: #569CD6;">def</span> <span style="color: #DCDCAA;">handle_dropping_unwanted_items</span>(<span style="color: #9CDCFE;">self</span>):
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Dropping Unwanted Items"</span>)
+        <span style="color: #6A9955;"># Drop all unwanted items with blue color from inventory</span>
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Looking for color {self.unwanted_item_color} in inventory..."</span>)
+        
+        <span style="color: #6A9955;"># First, let's check which slots actually have the color</span>
+        <span style="color: #9CDCFE;">slots_with_color</span> = []
+        <span style="color: #569CD6;">for</span> <span style="color: #9CDCFE;">slot_id</span> <span style="color: #569CD6;">in</span> <span style="color: #4EC9B0;">range</span>(<span style="color: #4EC9B0;">len</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_slots</span>)):
+            <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">does_color_exist_at_slot</span>(<span style="color: #9CDCFE;">slot_id</span>, <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">unwanted_item_color</span>, <span style="color: #B5CEA8;">10</span>):
+                <span style="color: #9CDCFE;">slots_with_color</span>.<span style="color: #DCDCAA;">append</span>(<span style="color: #9CDCFE;">slot_id</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #569CD6;">not</span> <span style="color: #9CDCFE;">slots_with_color</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"No slots found with target color, switching to thieving"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">THIEVING_STALLS</span>
+            <span style="color: #569CD6;">return</span>
+        
+        <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">f"Found {len(slots_with_color)} slots with color: {slots_with_color}"</span>)
+        
+        <span style="color: #569CD6;">if</span> <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">inventory_automation</span>.<span style="color: #DCDCAA;">drop_all_color</span>(<span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">unwanted_item_color</span>, <span style="color: #B5CEA8;">10</span>):
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Unwanted items dropped successfully"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">wait_random</span>(<span style="color: #B5CEA8;">1.0</span>, <span style="color: #B5CEA8;">3.0</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #9CDCFE;">state</span> = <span style="color: #9CDCFE;">self</span>.<span style="color: #4EC9B0;">StallsStates</span>.<span style="color: #4EC9B0;">THIEVING_STALLS</span>
+        <span style="color: #569CD6;">else</span>:
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">log</span>(<span style="color: #CE9178;">"Failed to drop unwanted items"</span>)
+            <span style="color: #9CDCFE;">self</span>.<span style="color: #DCDCAA;">stop_script</span>()</pre>
+                
+                <div style="margin: 15px 0; text-align: center;">
+                    <button id="copy-stalls-btn" style="
+                        background: linear-gradient(135deg, #10b981, #34d399);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(16, 185, 129, 0.3)'">
+                        📋 Copy Stalls Script to Clipboard
+                    </button>
+                </div>
+                
+                <div class="highlight">
+                    <strong>💡 Script Features:</strong>
+                    <ul style="color: #d1d5db; margin: 15px 0;">
+                        <li><strong>Stall Thievery Automation:</strong> Uses state management (THIEVING_STALLS, CHECKING_INVENTORY, DROPPING_UNWANTED_ITEMS) for efficient thieving cycles</li>
+                        <li><strong>Smart Stall Detection:</strong> Finds stalls by green color (#00FF00) for consistent targeting</li>
+                        <li><strong>XP Drop Monitoring:</strong> Detects white XP drops (#FFFFFF) to confirm successful thieving attempts</li>
+                        <li><strong>Inventory Overflow Management:</strong> Automatically checks inventory fullness to prevent item loss</li>
+                        <li><strong>Selective Item Dropping:</strong> Only drops unwanted items (#0000FF) while keeping valuable loot</li>
+                        <li><strong>Advanced Shift Key Handling:</strong> Uses multiple fallback methods for reliable shift key registration</li>
+                        <li><strong>Natural Timing:</strong> Random delays and humanized click patterns to avoid detection</li>
+                        <li><strong>Robust Error Recovery:</strong> Comprehensive error handling with detailed state logging</li>
+                    </ul>
+                </div>
                 </div>
             </div>
 
