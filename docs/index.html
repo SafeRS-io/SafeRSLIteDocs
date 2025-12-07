@@ -67,6 +67,20 @@
                             <p>Comprehensive error handling with proper cleanup and status reporting.</p>
                         </div>
                     </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <div class="feature-content">
+                            <h3>Action Builder</h3>
+                            <p>Create complex multi-step action sequences triggered by hotkeys. Chain clicks, color detection, delays, and conditional logic for powerful automation.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🖱️</div>
+                        <div class="feature-content">
+                            <h3>Click Forwarder</h3>
+                            <p>Forward mouse clicks through action sequences. Step through actions one-by-one with each click or use autoclicker mode for hands-free automation.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -147,9 +161,41 @@
                         <img src="assets/example_script_utilities.png" alt="Script Utilities Example" style="max-width: 50%; height: auto; border-radius: 8px; margin: 20px 0;">
                     </div>
                 </div>
+
+                <div class="showcase-step">
+                    <h3>Step 8: Action Builder <span id="step8-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step8-content" style="display: none;">
+                        <p>Build powerful action sequences that execute with a single hotkey press. Create multi-step automations with conditional logic, color detection, and human-like timing.</p>
+                        <p>Action Builder allows you to:</p>
+                        <ul style="color: #d1d5db; margin: 15px 0;">
+                            <li>Chain multiple actions together (clicks, key presses, delays, color scanning)</li>
+                            <li>Use conditional logic based on color detection results</li>
+                            <li>Assign hotkeys to trigger entire sequences instantly</li>
+                            <li>Create reusable action sets for common tasks</li>
+                            <li>Interact with inventory, spellbook, equipment, and custom areas</li>
+                        </ul>
+                        <p>Perfect for gear switching, quick actions, and complex automation workflows.</p>
+                    </div>
+                </div>
+
+                <div class="showcase-step">
+                    <h3>Step 9: Click Forwarder <span id="step9-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h3>
+                    <div id="step9-content" style="display: none;">
+                        <p>Forward mouse clicks through action sequences step-by-step. Each click executes the next action in your configured sequence, giving you precise control over complex automation.</p>
+                        <p>Click Forwarder features:</p>
+                        <ul style="color: #d1d5db; margin: 15px 0;">
+                            <li>Step-through mode: Execute actions one-by-one with each click</li>
+                            <li>Autoclicker mode: Automatically execute actions at configurable intervals</li>
+                            <li>Multiple action sets: Switch between different sequences on the fly</li>
+                            <li>Toggle hotkeys: Enable/disable forwarding with a key press</li>
+                            <li>Works seamlessly with Action Builder sequences</li>
+                        </ul>
+                        <p>Ideal for repetitive tasks, gear switches, and situations where you want to control the pace of automation.</p>
+                    </div>
+                </div>
             </div>
 
-            <h2>⚙️ Action Builder & Script Configuration <span id="config-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
+            <h2>⚙️ Action Builder & Click Forwarder <span id="config-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
             <div class="template-section" id="config-content" style="display: none;">
                 <h3>Action Builder</h3>
                 <p>The <strong>Action Builder</strong> allows you to create sequences of actions that are triggered by hotkeys. This powerful feature lets you automate complex multi-step operations with a single key press.</p>
@@ -223,7 +269,49 @@
                     <strong>📖 Usage:</strong> Action Builder is accessible from the <strong>Scripts</strong> tab. Create action sets, assign hotkeys, and enable them to use your sequences in-game.
                 </div>
 
-                <h3>Script Packaging & Configuration</h3>
+                <h3>Click Forwarder</h3>
+                <p>The <strong>Click Forwarder</strong> allows you to step through action sequences with each mouse click. It provides precise control over when actions execute, perfect for situations where you want manual control over the automation pace.</p>
+                
+                <div class="highlight">
+                    <strong>💡 Key Features:</strong>
+                    <ul style="color: #d1d5db; margin: 15px 0;">
+                        <li><strong>Step-Through Mode:</strong> Execute actions one-by-one with each left click</li>
+                        <li><strong>Autoclicker Mode:</strong> Automatically execute actions at configurable intervals (hands-free)</li>
+                        <li><strong>Action Set Integration:</strong> Use the same action sets created in Action Builder</li>
+                        <li><strong>Toggle Hotkeys:</strong> Enable or disable forwarding with a single key press</li>
+                        <li><strong>Smart Click Forwarding:</strong> Forwards clicks to the attached window while executing actions</li>
+                        <li><strong>Human-like Behavior:</strong> Optional randomization and attention drift simulation</li>
+                    </ul>
+                </div>
+
+                <h4>How It Works</h4>
+                <p>Click Forwarder intercepts your mouse clicks and forwards them to the attached game window while simultaneously executing the next action in your configured sequence. This creates a seamless integration between your manual input and automated actions.</p>
+                
+                <div class="highlight">
+                    <strong>📖 Usage:</strong> Click Forwarder is accessible from the <strong>Scripts</strong> tab. Select an action set, configure your toggle hotkey, and enable forwarding to start using it.
+                </div>
+            </div>
+
+            <h2>📤 Uploading Scripts to Marketplace <span id="upload-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
+            <div class="template-section" id="upload-content" style="display: none;">
+                <h3>Packaging Your Script</h3>
+                <p>Before uploading, you need to package your script with all its configurations. SafeRS Lite creates a complete bundle that includes everything needed to run your script.</p>
+                
+                <h4>How to Package</h4>
+                <p>To package your script with all configurations:</p>
+                <ol style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
+                    <li>Navigate to the <strong>Scripts</strong> tab</li>
+                    <li>Select your script from the list</li>
+                    <li>Click the <strong>Package</strong> button</li>
+                    <li>Choose a location to save the <code>bundle.json</code> file</li>
+                </ol>
+                <p>The packaged bundle includes all scan areas, custom areas, and the RuneLite profile you're currently using. This ensures anyone who downloads your script will have the exact same configuration.</p>
+
+                <div class="highlight">
+                    <strong>💡 Pro Tip:</strong> Before packaging, make sure you've configured all scan areas and activated the RuneLite profile you want to bundle with your script. The package captures your current configuration state.
+                </div>
+
+                <h3>Script Configuration & Bundles</h3>
                 <p>When you package a script for sharing or marketplace distribution, SafeRS Lite automatically bundles everything needed to run the script with your exact configuration.</p>
 
                 <h4>What Gets Included in Script Bundles</h4>
@@ -301,20 +389,6 @@
   <span style="color: #6A9955;">}</span>
 <span style="color: #6A9955;">}</span></pre>
 
-                <h4>Packaging Your Script</h4>
-                <p>To package your script with all configurations:</p>
-                <ol style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
-                    <li>Navigate to the <strong>Scripts</strong> tab</li>
-                    <li>Select your script from the list</li>
-                    <li>Click the <strong>Package</strong> button</li>
-                    <li>Choose a location to save the <code>bundle.json</code> file</li>
-                </ol>
-                <p>The packaged bundle includes all scan areas, custom areas, and the RuneLite profile you're currently using. This ensures anyone who downloads your script will have the exact same configuration.</p>
-
-                <div class="highlight">
-                    <strong>💡 Pro Tip:</strong> Before packaging, make sure you've configured all scan areas and activated the RuneLite profile you want to bundle with your script. The package captures your current configuration state.
-                </div>
-
                 <h4>Downloading Scripts from Marketplace</h4>
                 <p>When you download a script from the marketplace:</p>
                 <ul style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
@@ -324,6 +398,94 @@
                     <li><strong>Profile Naming:</strong> Scripts from the marketplace use profiles named <code>SafeRS_[scriptname]</code> to avoid conflicts</li>
                 </ul>
                 <p>This means scripts will work immediately after download without manual configuration!</p>
+
+                <h3>Upload Requirements & Process</h3>
+                <p>SafeRS Lite has specific requirements and processes for script submissions to ensure quality and maintain standards.</p>
+
+                <h4>Upload Methods</h4>
+                <div style="margin: 15px 0;">
+                    <div class="feature-card" style="margin-bottom: 15px;">
+                        <div class="feature-icon">⭐</div>
+                        <div class="feature-content">
+                            <h3>Premium Scripter Role - Direct Upload</h3>
+                            <p>If you have the <strong>Premium Scripter</strong> Discord role, you can upload scripts directly through the SafeRS Lite client. This allows for instant publishing to the marketplace.</p>
+                            <ul style="color: #d1d5db; margin: 10px 0 0 20px;">
+                                <li>Navigate to the <strong>Scripting</strong> tab</li>
+                                <li>Click <strong>Select Bundle to Upload</strong> button</li>
+                                <li>Choose your <code>bundle.json</code> file</li>
+                                <li>Your script will be uploaded and available immediately</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" style="margin-bottom: 15px;">
+                        <div class="feature-icon">📋</div>
+                        <div class="feature-content">
+                            <h3>Portal Submission - Standard Process</h3>
+                            <p>If you don't have the Premium Scripter role, submit your script through the submission portal for review and approval.</p>
+                            <ul style="color: #d1d5db; margin: 10px 0 0 20px;">
+                                <li>Package your script using the steps above</li>
+                                <li>Submit your <code>bundle.json</code> through the official submission portal</li>
+                                <li>Developers review your submission for quality and standards compliance</li>
+                                <li>If approved, an authorized moderator adds your script to the marketplace</li>
+                            </ul>
+                            <p style="margin-top: 10px;">This process ensures all scripts meet SafeRS Lite's quality standards before being available to users.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>Script Standards</h4>
+                <p>All scripts submitted to the marketplace must follow SafeRS Lite's script standards:</p>
+                <ul style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
+                    <li><strong>Code Quality:</strong> Clean, readable, and well-documented code</li>
+                    <li><strong>Error Handling:</strong> Proper exception handling and cleanup procedures</li>
+                    <li><strong>Resource Management:</strong> Correct cleanup in the <code>cleanup()</code> method</li>
+                    <li><strong>Naming Conventions:</strong> Descriptive class and variable names</li>
+                    <li><strong>Documentation:</strong> Clear docstrings explaining script functionality</li>
+                    <li><strong>Configuration:</strong> Properly bundled with all required areas and profiles</li>
+                </ul>
+
+                <div class="highlight">
+                    <strong>⚠️ Important:</strong> Scripts that don't meet these standards will be rejected during review. Make sure your script is thoroughly tested and follows best practices before submission.
+                </div>
+
+                <h4>Premium Scripts</h4>
+                <p>Premium scripts are paid scripts available through the marketplace. There are special requirements for premium scripts:</p>
+                <ul style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
+                    <li><strong>Premium Scripter Requirement:</strong> Only Premium Scripters can create premium scripts</li>
+                    <li><strong>Payment Processing:</strong> Must work with SafeRS Lite team to set up payment processing</li>
+                    <li><strong>Customizations:</strong> Additional features and integrations require coordination with the development team</li>
+                    <li><strong>Approval Process:</strong> Premium scripts undergo additional review to ensure payment systems work correctly</li>
+                </ul>
+                <p>If you're interested in creating premium scripts, contact the SafeRS Lite team through Discord to discuss requirements and payment setup.</p>
+
+                <h4>Free Script Sharing</h4>
+                <p>Anyone can create and share scripts for free! However, there's an important distinction:</p>
+                <div style="margin: 15px 0; padding: 15px; background-color: #2C2F33; border-radius: 8px; border-left: 4px solid #5865F2;">
+                    <p style="color: #d1d5db; margin: 0;"><strong>Free Sharing vs. Marketplace:</strong></p>
+                    <ul style="color: #d1d5db; margin: 10px 0 0 20px;">
+                        <li><strong>Free Sharing:</strong> You can share your script files (<code>bundle.json</code>) directly with others through any method (Discord, forums, etc.) - no approval needed</li>
+                        <li><strong>Marketplace:</strong> Scripts in the marketplace must be approved and verified. Only approved scripts appear in the in-client marketplace for users to browse and download</li>
+                    </ul>
+                    <p style="color: #d1d5db; margin-top: 10px;">The marketplace is limited to <strong>approved/verified scripts only</strong> to ensure quality and safety for all users.</p>
+                </div>
+
+                <h4>Submission Checklist</h4>
+                <p>Before submitting your script, make sure you have:</p>
+                <ul style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
+                    <li>✅ Tested your script thoroughly</li>
+                    <li>✅ Packaged your script with all configurations (bundle.json)</li>
+                    <li>✅ Verified all scan areas are properly configured</li>
+                    <li>✅ Included appropriate RuneLite profile (if required)</li>
+                    <li>✅ Added clear documentation and comments to your code</li>
+                    <li>✅ Implemented proper error handling and cleanup</li>
+                    <li>✅ Followed SafeRS Lite script standards</li>
+                    <li>✅ Checked that your script doesn't violate any game rules</li>
+                </ul>
+
+                <div class="highlight">
+                    <strong>📝 Note:</strong> For portal submissions, include a clear description of what your script does, any special requirements, and testing notes. This helps the review process go smoothly.
+                </div>
             </div>
 
             <h2>📝 Base Script Template <span id="template-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
