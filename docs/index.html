@@ -149,6 +149,183 @@
                 </div>
             </div>
 
+            <h2>⚙️ Action Builder & Script Configuration <span id="config-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
+            <div class="template-section" id="config-content" style="display: none;">
+                <h3>Action Builder</h3>
+                <p>The <strong>Action Builder</strong> allows you to create sequences of actions that are triggered by hotkeys. This powerful feature lets you automate complex multi-step operations with a single key press.</p>
+                
+                <div class="highlight">
+                    <strong>💡 Key Features:</strong>
+                    <ul style="color: #d1d5db; margin: 15px 0;">
+                        <li><strong>Action Sequences:</strong> Chain together multiple actions (clicks, color detection, key presses, delays, etc.)</li>
+                        <li><strong>Hotkey Triggers:</strong> Assign any keyboard hotkey to activate your action sequence</li>
+                        <li><strong>Conditional Logic:</strong> Use if/else statements based on color detection results</li>
+                        <li><strong>Area-Based Actions:</strong> Click locations, scan colors, and interact with inventory slots, spellbook, equipment, and custom areas</li>
+                        <li><strong>Human-like Timing:</strong> Randomize delays and click positions for natural behavior</li>
+                    </ul>
+                </div>
+
+                <h4>Available Action Types</h4>
+                <div style="margin: 15px 0;">
+                    <table style="width: 100%; border-collapse: collapse; color: #d1d5db;">
+                        <thead>
+                            <tr style="background-color: #2C2F33; border-bottom: 2px solid #40444B;">
+                                <th style="padding: 10px; text-align: left;">Action Type</th>
+                                <th style="padding: 10px; text-align: left;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>👆 Click</code></td>
+                                <td style="padding: 8px;">Click a specific location, inventory slot, spellbook slot, or equipment slot</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>🔍 Find & Click</code></td>
+                                <td style="padding: 8px;">Scan an area for a color and automatically click it when found</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>⌨️ Key</code></td>
+                                <td style="padding: 8px;">Press a keyboard key or key combination (with Ctrl, Shift, Alt modifiers)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>⏱️ Wait</code></td>
+                                <td style="padding: 8px;">Pause execution for a specified duration (with optional randomization)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>⏳ Wait Color</code></td>
+                                <td style="padding: 8px;">Wait until a specific color appears in an area before continuing</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>✅ If Found</code></td>
+                                <td style="padding: 8px;">Conditional - only execute next actions if previous color scan found a match</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>❌ If Missing</code></td>
+                                <td style="padding: 8px;">Conditional - only execute next actions if previous color scan did NOT find a match</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>↩️ End If</code></td>
+                                <td style="padding: 8px;">End a conditional block (if/else)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>⛔ Stop</code></td>
+                                <td style="padding: 8px;">Stop execution of the action sequence</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #40444B;">
+                                <td style="padding: 8px;"><code>🎲 Antiban</code></td>
+                                <td style="padding: 8px;">Random chance to skip this action (for human-like variation)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight">
+                    <strong>📖 Usage:</strong> Action Builder is accessible from the <strong>Scripts</strong> tab. Create action sets, assign hotkeys, and enable them to use your sequences in-game.
+                </div>
+
+                <h3>Script Packaging & Configuration</h3>
+                <p>When you package a script for sharing or marketplace distribution, SafeRS Lite automatically bundles everything needed to run the script with your exact configuration.</p>
+
+                <h4>What Gets Included in Script Bundles</h4>
+                <p>Script bundles (saved as <code>bundle.json</code>) contain all the necessary configuration:</p>
+                
+                <div style="margin: 15px 0;">
+                    <div class="feature-card" style="margin-bottom: 15px;">
+                        <div class="feature-icon">📜</div>
+                        <div class="feature-content">
+                            <h3>Script Content</h3>
+                            <p>The complete Python script source code that defines your automation logic. This is the core of your script.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" style="margin-bottom: 15px;">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <h3>Scan Areas</h3>
+                            <p>All configured scan area coordinates are included. This includes:</p>
+                            <ul style="color: #d1d5db; margin: 10px 0 0 20px;">
+                                <li>Standard areas: <code>inventory</code>, <code>play_area</code>, <code>bank</code>, <code>spellbook</code>, <code>chat</code>, <code>minimap</code>, etc.</li>
+                                <li>All custom configured scan areas with their exact coordinates</li>
+                                <li>Area definitions that scripts reference during execution</li>
+                            </ul>
+                            <p style="margin-top: 10px;">When someone downloads your script, they'll get the exact area configurations you used, ensuring consistent behavior.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" style="margin-bottom: 15px;">
+                        <div class="feature-icon">📍</div>
+                        <div class="feature-content">
+                            <h3>Custom Areas</h3>
+                            <p>Any custom area definitions you've created are included in the bundle. Custom areas allow scripts to interact with specific screen regions beyond the standard areas.</p>
+                            <p style="margin-top: 10px;"><strong>Note:</strong> Custom area names with spaces should use underscores when referenced in scripts (e.g., <code>"my_custom_area"</code>).</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" style="margin-bottom: 15px;">
+                        <div class="feature-icon">⚙️</div>
+                        <div class="feature-content">
+                            <h3>RuneLite Profile</h3>
+                            <p>The complete RuneLite plugin profile configuration is embedded in the bundle, including:</p>
+                            <ul style="color: #d1d5db; margin: 10px 0 0 20px;">
+                                <li>Full RuneLite plugin settings (all properties)</li>
+                                <li>Client configuration that matches your setup</li>
+                                <li>Plugin configurations that scripts may depend on</li>
+                            </ul>
+                            <p style="margin-top: 10px;">When a script is downloaded, the RuneLite profile is automatically created/imported if it doesn't exist. Scripts tied to specific profiles will prompt users to activate the correct profile.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>Bundle Structure</h4>
+                <p>The <code>bundle.json</code> file follows this structure:</p>
+                <pre class="code-block" style="background: #1e1e1e; padding: 15px; border-radius: 8px; overflow-x: auto;"><span style="color: #6A9955;">{</span>
+  <span style="color: #CE9178;">"bundle_version"</span>: <span style="color: #CE9178;">"2.1"</span>,
+  <span style="color: #CE9178;">"bundle_type"</span>: <span style="color: #CE9178;">"script"</span>,
+  <span style="color: #CE9178;">"bundle_name"</span>: <span style="color: #CE9178;">"My Script Name"</span>,
+  <span style="color: #CE9178;">"app_name"</span>: <span style="color: #CE9178;">"SafeRSLite"</span>,
+  <span style="color: #CE9178;">"exported"</span>: <span style="color: #CE9178;">"2024-01-01 12:00:00"</span>,
+  <span style="color: #CE9178;">"script_content"</span>: <span style="color: #6A9955;">"# Python script code here..."</span>,
+  <span style="color: #CE9178;">"scan_areas"</span>: <span style="color: #6A9955;">{</span>
+    <span style="color: #CE9178;">"inventory"</span>: <span style="color: #6A9955;">[</span><span style="color: #B5CEA8;">100</span>, <span style="color: #B5CEA8;">100</span>, <span style="color: #B5CEA8;">500</span>, <span style="color: #B5CEA8;">400</span><span style="color: #6A9955;">]</span>,
+    <span style="color: #CE9178;">"play_area"</span>: <span style="color: #6A9955;">[</span><span style="color: #B5CEA8;">50</span>, <span style="color: #B5CEA8;">50</span>, <span style="color: #B5CEA8;">750</span>, <span style="color: #B5CEA8;">550</span><span style="color: #6A9955;">]</span>
+    <span style="color: #6A9955;">...</span>
+  <span style="color: #6A9955;">}</span>,
+  <span style="color: #CE9178;">"custom_areas"</span>: <span style="color: #6A9955;">{</span>
+    <span style="color: #CE9178;">"my_custom_area"</span>: <span style="color: #6A9955;">{</span>
+      <span style="color: #CE9178;">"coordinates"</span>: <span style="color: #6A9955;">[</span><span style="color: #B5CEA8;">200</span>, <span style="color: #B5CEA8;">200</span>, <span style="color: #B5CEA8;">300</span>, <span style="color: #B5CEA8;">300</span><span style="color: #6A9955;">]</span>
+    <span style="color: #6A9955;">}</span>
+  <span style="color: #6A9955;">}</span>,
+  <span style="color: #CE9178;">"runelite_profile"</span>: <span style="color: #6A9955;">{</span>
+    <span style="color: #CE9178;">"name"</span>: <span style="color: #CE9178;">"SafeRS_MyScript"</span>,
+    <span style="color: #CE9178;">"properties"</span>: <span style="color: #6A9955;">"# Full RuneLite profile properties content..."</span>
+  <span style="color: #6A9955;">}</span>
+<span style="color: #6A9955;">}</span></pre>
+
+                <h4>Packaging Your Script</h4>
+                <p>To package your script with all configurations:</p>
+                <ol style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
+                    <li>Navigate to the <strong>Scripts</strong> tab</li>
+                    <li>Select your script from the list</li>
+                    <li>Click the <strong>Package</strong> button</li>
+                    <li>Choose a location to save the <code>bundle.json</code> file</li>
+                </ol>
+                <p>The packaged bundle includes all scan areas, custom areas, and the RuneLite profile you're currently using. This ensures anyone who downloads your script will have the exact same configuration.</p>
+
+                <div class="highlight">
+                    <strong>💡 Pro Tip:</strong> Before packaging, make sure you've configured all scan areas and activated the RuneLite profile you want to bundle with your script. The package captures your current configuration state.
+                </div>
+
+                <h4>Downloading Scripts from Marketplace</h4>
+                <p>When you download a script from the marketplace:</p>
+                <ul style="color: #d1d5db; margin: 15px 0; padding-left: 20px;">
+                    <li><strong>Scan Areas:</strong> All configured areas are automatically imported and set up</li>
+                    <li><strong>Custom Areas:</strong> Any custom areas are added to your configuration</li>
+                    <li><strong>RuneLite Profile:</strong> The profile is automatically created/imported if it doesn't exist. You'll be prompted to activate it if needed</li>
+                    <li><strong>Profile Naming:</strong> Scripts from the marketplace use profiles named <code>SafeRS_[scriptname]</code> to avoid conflicts</li>
+                </ul>
+                <p>This means scripts will work immediately after download without manual configuration!</p>
+            </div>
+
             <h2>📝 Base Script Template <span id="template-toggle" style="cursor: pointer; font-size: 0.7em; color: #666;">[Click to expand]</span></h2>
             <div class="template-section" id="template-content" style="display: none;">
                 <h3>Complete Example Script</h3>

@@ -4,6 +4,7 @@
 function checkAllSectionsCollapsed() {
     const sections = [
         'showcase-content',
+        'config-content',
         'template-content', 
         'api-content',
         'libraries-content',
@@ -85,6 +86,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Make section titles clickable - Config toggle
+    const configH2 = document.querySelector('#config-toggle').closest('h2');
+    configH2.addEventListener('click', function() {
+        const content = document.getElementById('config-content');
+        const toggle = document.getElementById('config-toggle');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggle.textContent = '[Click to collapse]';
+            // Scroll to position content just below header
+            scrollContentBelowHeader(content);
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = '[Click to expand]';
+            // Check if all sections are collapsed and scroll to top if needed
+            setTimeout(() => {
+                checkAllSectionsCollapsed();
+            }, 100);
+        }
+    });
 
     // Make section titles clickable - Template toggle
     const templateH2 = document.querySelector('#template-toggle').closest('h2');
